@@ -94,7 +94,7 @@ export default function Marketplace() {
         }}>
           {/* Accent strip */}
           <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, background: 'var(--brand-500)' }} />
-          
+
           <div style={{
             width: 48, height: 48, borderRadius: 12, background: 'var(--brand-50)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
@@ -108,7 +108,7 @@ export default function Marketplace() {
               <span style={{ background: 'var(--brand-100)', color: 'var(--brand-700)', padding: '1px 8px', borderRadius: 999, fontSize: '0.625rem', fontWeight: 800, textTransform: 'uppercase' }}>Live Analysis</span>
             </div>
             <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 500 }}>
-              Based on the Indore Mandi index — your crop's fair market value is currently 
+              Based on the Indore Mandi index — your crop's fair market value is currently
               <strong style={{ color: 'var(--brand-700)' }}> ₹{suggestedMin.toLocaleString()} – ₹{suggestedMax.toLocaleString()}</strong> per quintal.
             </p>
           </div>
@@ -131,7 +131,7 @@ export default function Marketplace() {
 
             {/* Mode Toggle */}
             <div style={{ display: 'flex', background: 'var(--brand-50)', borderRadius: 12, padding: 4, marginBottom: 24, border: '1px solid var(--brand-100)' }}>
-              <button 
+              <button
                 onClick={() => setSellMode('sell')}
                 style={{
                   flex: 1, padding: '8px 12px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600,
@@ -143,7 +143,7 @@ export default function Marketplace() {
               >
                 Sell Immediately
               </button>
-              <button 
+              <button
                 onClick={() => setSellMode('store')}
                 style={{
                   flex: 1, padding: '8px 12px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600,
@@ -159,7 +159,7 @@ export default function Marketplace() {
 
             {listed ? (
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
-                <div style={{ 
+                <div style={{
                   width: 64, height: 64, borderRadius: 99, background: '#ECFDF5', margin: '0 auto 20px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
@@ -236,7 +236,7 @@ export default function Marketplace() {
               <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Crop Type</label>
-                  <select 
+                  <select
                     style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
                     value={form.crop} onChange={e => setForm({ ...form, crop: e.target.value })} required
                   >
@@ -244,18 +244,18 @@ export default function Marketplace() {
                     {CROPS.map(c => <option key={c} value={c}>{t(c)}</option>)}
                   </select>
                 </div>
-                
+
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Quantity (qtl)</label>
-                    <input 
+                    <input
                       type="number" style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
-                      placeholder="e.g. 50" value={form.qty} onChange={e => setForm({ ...form, qty: e.target.value })} required 
+                      placeholder="e.g. 50" value={form.qty} onChange={e => setForm({ ...form, qty: e.target.value })} required
                     />
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Quality Grade</label>
-                    <select 
+                    <select
                       style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
                       value={form.grade} onChange={e => setForm({ ...form, grade: e.target.value })} required
                     >
@@ -267,25 +267,25 @@ export default function Marketplace() {
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Village / Mandi Location</label>
-                  <input 
+                  <input
                     type="text" style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
-                    placeholder="e.g. Dewas, MP" value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} required 
+                    placeholder="e.g. Dewas, MP" value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} required
                   />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Harvest/Ready Date</label>
-                    <input 
+                    <input
                       type="date" style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
-                      value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required 
+                      value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required
                     />
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Asking Price (₹/qtl)</label>
-                    <input 
+                    <input
                       type="number" style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
-                      placeholder="e.g. 5200" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} 
+                      placeholder="e.g. 5200" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })}
                     />
                   </div>
                 </div>
@@ -339,8 +339,8 @@ export default function Marketplace() {
 
             <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 16, marginBottom: 8 }}>
               {FILTERS.map(f => (
-                <button 
-                  key={f} 
+                <button
+                  key={f}
                   onClick={() => setActiveFilter(f)}
                   style={{
                     padding: '6px 16px', borderRadius: 999, fontSize: '0.75rem', fontWeight: 600,
@@ -357,9 +357,9 @@ export default function Marketplace() {
             </div>
 
             {showMap ? (
-              <div style={{ 
-                height: 380, borderRadius: 16, overflow: 'hidden', border: '1px solid var(--border)', 
-                marginBottom: 24, boxShadow: 'var(--shadow-sm)' 
+              <div style={{
+                height: 380, borderRadius: 16, overflow: 'hidden', border: '1px solid var(--border)',
+                marginBottom: 24, boxShadow: 'var(--shadow-sm)'
               }}>
                 <MapContainer center={[22.7196, 75.8577]} zoom={12} style={{ height: '100%', width: '100%' }}>
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="© OSM" />
@@ -381,12 +381,12 @@ export default function Marketplace() {
                 }}>
                   <div style={{ display: 'flex', alignItems: 'stretch' }}>
                     {/* Visual Strip */}
-                    <div style={{ 
+                    <div style={{
                       width: 80, background: 'var(--brand-50)', position: 'relative',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       borderRight: '1px solid var(--border-light)'
                     }}>
-                      <div style={{ 
+                      <div style={{
                         width: 48, height: 48, borderRadius: 12, background: 'white',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: 24, boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
@@ -400,8 +400,8 @@ export default function Marketplace() {
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                             <span style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--text-primary)' }}>{offer.name}</span>
                             {offer.verified && (
-                              <span style={{ 
-                                background: '#ECFDF5', color: '#059669', padding: '1px 8px', borderRadius: 999, 
+                              <span style={{
+                                background: '#ECFDF5', color: '#059669', padding: '1px 8px', borderRadius: 999,
                                 fontSize: '0.625rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em'
                               }}>✓ VERIFIED</span>
                             )}
@@ -421,9 +421,9 @@ export default function Marketplace() {
                       </div>
 
                       <div style={{ display: 'flex', gap: 8 }}>
-                        <button 
+                        <button
                           onClick={() => toast.success(`Acceptance request sent to ${offer.name}!`)}
-                          style={{ 
+                          style={{
                             flex: 1.5, background: 'var(--brand-600)', color: 'white', height: 40, borderRadius: 8,
                             fontSize: '0.8125rem', fontWeight: 600, border: 'none', cursor: 'pointer',
                             transition: 'background 0.2s'
@@ -433,9 +433,9 @@ export default function Marketplace() {
                         >
                           Send Sale Intent
                         </button>
-                        <button 
+                        <button
                           onClick={() => setChatOpen(offer.id)}
-                          style={{ 
+                          style={{
                             flex: 1, background: 'white', color: 'var(--text-primary)', height: 40, borderRadius: 8,
                             fontSize: '0.8125rem', fontWeight: 600, border: '1px solid var(--border)', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
@@ -451,36 +451,35 @@ export default function Marketplace() {
             </div>
           </div>
         </div>
-        </div>
+      </div>
 
-        {/* Chat Modal */}
-        {chatOpen && (
-          <div className="modal-overlay" onClick={() => setChatOpen(null)}>
-            <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: 400 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)' }}>
-                <div style={{ fontSize: 32 }}>🏪</div>
-                <div>
-                  <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{buyerOffers.find(o => o.id === chatOpen)?.name}</div>
-                  <div style={{ fontSize: '0.75rem', color: '#4CAF50' }}>🟢 Online · Verified Buyer</div>
-                </div>
-                <button onClick={() => setChatOpen(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--text-muted)', minHeight: 36 }}>✕</button>
+      {/* Chat Modal */}
+      {chatOpen && (
+        <div className="modal-overlay" onClick={() => setChatOpen(null)}>
+          <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: 400 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)' }}>
+              <div style={{ fontSize: 32 }}>🏪</div>
+              <div>
+                <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{buyerOffers.find(o => o.id === chatOpen)?.name}</div>
+                <div style={{ fontSize: '0.75rem', color: '#4CAF50' }}>🟢 Online · Verified Buyer</div>
               </div>
-              <div style={{ minHeight: 200, display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
-                <div style={{ background: '#E8F5E9', padding: '10px 14px', borderRadius: '0 12px 12px 12px', maxWidth: '80%', fontSize: '0.875rem', color: '#1B5E20' }}>
-                  Namaste! I'm interested in your Soybean. Can you offer ₹5,250?
-                </div>
-                <div style={{ background: '#1B5E20', padding: '10px 14px', borderRadius: '12px 0 12px 12px', maxWidth: '80%', marginLeft: 'auto', fontSize: '0.875rem', color: 'white' }}>
-                  My minimum is ₹5,350. Quality is Grade A, lab certified.
-                </div>
+              <button onClick={() => setChatOpen(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: 'var(--text-muted)', minHeight: 36 }}>✕</button>
+            </div>
+            <div style={{ minHeight: 200, display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
+              <div style={{ background: '#E8F5E9', padding: '10px 14px', borderRadius: '0 12px 12px 12px', maxWidth: '80%', fontSize: '0.875rem', color: '#1B5E20' }}>
+                Namaste! I'm interested in your Soybean. Can you offer ₹5,250?
               </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input type="text" className="form-input" placeholder="Type your message..." style={{ flex: 1 }} />
-                <button className="btn btn-primary" style={{ padding: '10px 16px', minHeight: 48 }} onClick={() => toast.success('Message sent!')}>Send</button>
+              <div style={{ background: '#1B5E20', padding: '10px 14px', borderRadius: '12px 0 12px 12px', maxWidth: '80%', marginLeft: 'auto', fontSize: '0.875rem', color: 'white' }}>
+                My minimum is ₹5,350. Quality is Grade A, lab certified.
               </div>
             </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input type="text" className="form-input" placeholder="Type your message..." style={{ flex: 1 }} />
+              <button className="btn btn-primary" style={{ padding: '10px 16px', minHeight: 48 }} onClick={() => toast.success('Message sent!')}>Send</button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
-  );
+  )
 }
