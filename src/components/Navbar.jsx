@@ -11,7 +11,7 @@ import {
 const ROLE_NAV = {
   farmer: [
     { path: '/dashboard',     labelKey: 'nav.dashboard',   icon: Sprout    },
-    { path: '/price-tracker', label: 'Prices',             icon: BarChart2 },
+    { path: '/price-tracker', labelKey: 'nav.prices',       icon: BarChart2 },
     { path: '/marketplace',   labelKey: 'nav.marketplace', icon: TrendingUp},
     { path: '/cold-storage',  labelKey: 'nav.coldStorage', icon: Snowflake },
     { path: '/transport',     labelKey: 'nav.transport',   icon: Truck     },
@@ -313,7 +313,7 @@ export default function Navbar() {
             fontSize: '0.9rem', fontWeight: 500, color: '#dc2626',
             background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
           }}>
-            <LogOut size={16} /> Sign Out
+            <LogOut size={16} /> {t('nav.signOut')}
           </button>
         </div>
       )}

@@ -48,11 +48,11 @@ export default function WholesalerDashboard() {
   const [escrowStep, setEscrowStep] = useState(0);
   const [provenanceModal, setProvenanceModal] = useState(null);
 
-  const filters = [
-    { id: 'all', label: 'All Listings' },
-    { id: 'certified', label: '✓ Lab Certified' },
-    { id: 'iot', label: '📡 IoT Tracked' },
-    { id: 'delivery', label: '🚚 Logistics Inc.' },
+  const getFilters = () => [
+    { id: 'all',       label: t('wholesaler.filterAll')      },
+    { id: 'certified', label: t('wholesaler.filterCertified') },
+    { id: 'iot',       label: t('wholesaler.filterIot')       },
+    { id: 'delivery',  label: t('wholesaler.filterDelivery')  },
   ];
 
   const [localListings, setLocalListings] = useState([]);
@@ -115,9 +115,9 @@ export default function WholesalerDashboard() {
         
         {/* ── BREADCRUMB ── */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-muted)' }}>
-          <span style={{ cursor: 'pointer', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-600)'} onMouseLeave={e => e.currentTarget.style.color = 'inherit'}>Home</span>
+          <span style={{ cursor: 'pointer', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-600)'} onMouseLeave={e => e.currentTarget.style.color = 'inherit'}>{t('general.home')}</span>
           <span style={{ color: 'var(--border-strong)' }}>/</span>
-          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Wholesaler Panel</span>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{t('wholesaler.panelTitle')}</span>
         </div>
 
         {/* ── ENTERPRISE HEADER ── */}
@@ -134,15 +134,15 @@ export default function WholesalerDashboard() {
               {GREETINGS[i18n.language] || 'Namaste'}, {user?.name?.split(' ')[0] || 'Partner'}
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9375rem', maxWidth: 600 }}>
-              Manage your agricultural supply chain, track ongoing procurement, and explore real-time farmer listings across Madhya Pradesh.
+              {t('wholesaler.headerDesc')}
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16, marginTop: 32 }}>
               {[
-                { label: 'Active Orders', value: '4', icon: <Package size={18} /> },
-                { label: 'Monthly Volume', value: '₹5.4L', icon: <BarChart3 size={18} /> },
-                { label: 'Network Partners', value: '12', icon: <Star size={18} /> },
-                { label: 'Escrow Balanced', value: '₹1.13L', icon: <Wallet size={18} /> },
+                { label: t('wholesaler.activeOrders'),   value: '4',     icon: <Package size={18} /> },
+                { label: t('wholesaler.monthlyVolume'),  value: '₹5.4L', icon: <BarChart3 size={18} /> },
+                { label: t('wholesaler.networkPartners'),value: '12',    icon: <Star size={18} /> },
+                { label: t('wholesaler.escrowBalance'),  value: '₹1.13L',icon: <Wallet size={18} /> },
               ].map((stat, i) => (
                 <div key={i} style={{ 
                   background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
@@ -163,10 +163,10 @@ export default function WholesalerDashboard() {
           marginBottom: 32, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', width: 'fit-content'
         }}>
           {[
-            { id: 'browse', label: 'Live Marketplace', icon: <Layout size={16} /> },
-            { id: 'orders', label: 'Procurements', icon: <Package size={16} /> },
-            { id: 'transactions', label: 'Ledger', icon: <Clock size={16} /> },
-            { id: 'scan', label: 'QR Verify', icon: <Search size={16} /> },
+            { id: 'browse',       label: t('wholesaler.tabBrowse'), icon: <Layout size={16} /> },
+            { id: 'orders',       label: t('wholesaler.tabOrders'), icon: <Package size={16} /> },
+            { id: 'transactions', label: t('wholesaler.tabLedger'), icon: <Clock size={16} /> },
+            { id: 'scan',         label: t('wholesaler.tabQR'),     icon: <Search size={16} /> },
           ].map(tab => (
             <button 
               key={tab.id}
@@ -189,7 +189,7 @@ export default function WholesalerDashboard() {
           <>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
               <div style={{ display: 'flex', gap: 8 }}>
-                {filters.map(f => (
+                {getFilters().map(f => (
                   <button 
                     key={f.id}
                     onClick={() => setActiveFilter(f.id)}
@@ -205,7 +205,7 @@ export default function WholesalerDashboard() {
                 ))}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--success)', fontSize: '0.75rem', fontWeight: 700 }}>
-                <div style={{ width: 8, height: 8, borderRadius: 99, background: 'var(--success)' }} /> REAL-TIME AGMARKNET DATA
+                <div style={{ width: 8, height: 8, borderRadius: 99, background: 'var(--success)' }} /> {t('wholesaler.realtimeData')}
               </div>
             </div>
 
@@ -244,16 +244,16 @@ export default function WholesalerDashboard() {
                           <div style={{ fontWeight: 900, fontSize: '1.25rem', color: 'var(--brand-700)', letterSpacing: '-0.02em' }}>
                             ₹{f.price.toLocaleString()}
                           </div>
-                          <div style={{ fontSize: '0.625rem', color: 'var(--text-muted)', fontWeight: 600 }}>per quintal</div>
+                          <div style={{ fontSize: '0.625rem', color: 'var(--text-muted)', fontWeight: 600 }}>{t('wholesaler.perQuintal')}</div>
                         </div>
                       </div>
 
                       {/* Specs Row */}
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 16 }}>
                         {[
-                          { l: 'Crop', v: t(f.cropKey) || f.crop },
-                          { l: 'Qty', v: `${f.qty} qtl` },
-                          { l: 'Grade', v: f.grade },
+                          { l: t('wholesaler.specCrop'),  v: t(f.cropKey) || f.crop },
+                          { l: t('wholesaler.specQty'),   v: `${f.qty} qtl` },
+                          { l: t('wholesaler.specGrade'), v: f.grade },
                         ].map((spec, i) => (
                           <div key={i} style={{ background: 'var(--bg-page)', padding: '6px 8px', borderRadius: 8, textAlign: 'center' }}>
                             <div style={{ fontSize: '0.625rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>{spec.l}</div>
@@ -264,20 +264,20 @@ export default function WholesalerDashboard() {
 
                       <div style={{ display: 'flex', gap: 8 }}>
                         {f.certified ? (
-                          <button 
-                            className="btn btn-primary" 
+                          <button
+                            className="btn btn-primary"
                             style={{ flex: 2, height: 38, fontSize: '0.75rem', background: '#0F172A' }}
                             onClick={() => { setEscrowModal(f); setEscrowStep(0); }}
                           >
-                            <Shield size={14} style={{ marginRight: 6 }} /> Blockchain Escrow
+                            <Shield size={14} style={{ marginRight: 6 }} /> {t('wholesaler.blockchainEscrow')}
                           </button>
                         ) : (
-                          <button 
-                            className="btn btn-primary" 
+                          <button
+                            className="btn btn-primary"
                             style={{ flex: 2, height: 38, fontSize: '0.75rem' }}
                             onClick={() => { setOfferModal(f); setOfferPrice(f.price.toString()); }}
                           >
-                            Place Direct Offer
+                            {t('wholesaler.placeDirectOffer')}
                           </button>
                         )}
                         <button 
@@ -345,13 +345,13 @@ export default function WholesalerDashboard() {
                       onClick={() => setProvenanceModal(order)}
                       style={{ background: 'none', border: 'none', color: 'var(--brand-600)', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
                     >
-                      <Shield size={14} /> Provenance Ledger
+                      <Shield size={14} /> {t('wholesaler.provenanceLedger')}
                     </button>
                     {order.status === 'Pending' && (
-                      <button className="btn btn-primary btn-sm" onClick={() => setRazorpayModal(order)}>Pay Now</button>
+                      <button className="btn btn-primary btn-sm" onClick={() => setRazorpayModal(order)}>{t('wholesaler.payNow')}</button>
                     )}
                     {order.status === 'Delivered' && (
-                      <button className="btn btn-secondary btn-sm" onClick={() => setRatingModal(order)}>Rate Farmer</button>
+                      <button className="btn btn-secondary btn-sm" onClick={() => setRatingModal(order)}>{t('wholesaler.rateFarmer')}</button>
                     )}
                   </div>
                 </div>
@@ -386,10 +386,10 @@ export default function WholesalerDashboard() {
                   ))}
                 </div>
                 <button className="btn btn-primary btn-full" style={{ background: '#3399cc', height: 48 }} onClick={simulatePayment} disabled={rpLoading}>
-                  {rpLoading ? 'Processing...' : `Pay ₹${(razorpayModal.price * razorpayModal.qty).toLocaleString()}`}
+                  {rpLoading ? t('wholesaler.processing') : `${t('wholesaler.payNow')} ₹${(razorpayModal.price * razorpayModal.qty).toLocaleString()}`}
                 </button>
                 <div style={{ textAlign: 'center', marginTop: 16 }}>
-                  <button onClick={() => setRazorpayModal(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>Cancel Payment</button>
+                  <button onClick={() => setRazorpayModal(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>{t('wholesaler.cancelPayment')}</button>
                 </div>
               </div>
             </div>
@@ -403,8 +403,8 @@ export default function WholesalerDashboard() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
                 <div style={{ background: 'var(--brand-100)', padding: 8, borderRadius: 12 }}><Shield size={24} color="var(--brand-700)" /></div>
                 <div>
-                  <h3 style={{ fontWeight: 800, fontSize: '1.125rem' }}>Immutable Ledger</h3>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Blockchain verified supply chain history</p>
+                  <h3 style={{ fontWeight: 800, fontSize: '1.125rem' }}>{t('wholesaler.immutableLedger')}</h3>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t('wholesaler.blockchainVerified')}</p>
                 </div>
               </div>
 
@@ -432,7 +432,7 @@ export default function WholesalerDashboard() {
                 ))}
               </div>
 
-              <button className="btn btn-secondary btn-full" style={{ marginTop: 32 }} onClick={() => setProvenanceModal(null)}>Close Verified View</button>
+              <button className="btn btn-secondary btn-full" style={{ marginTop: 32 }} onClick={() => setProvenanceModal(null)}>{t('wholesaler.closeVerified')}</button>
             </div>
           </div>
         )}

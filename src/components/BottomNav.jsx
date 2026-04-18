@@ -1,34 +1,36 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../context/AppContext';
 import { Sprout, ShoppingCart, Truck, User, LayoutDashboard, TrendingUp, HelpCircle, Bot } from 'lucide-react';
 
 const FARMER_NAV = [
-  { path: '/dashboard',     icon: Sprout,          label: 'Dashboard' },
-  { path: '/price-tracker', icon: TrendingUp,      label: 'Prices'    },
-  { path: '/marketplace',   icon: ShoppingCart,    label: 'Market'    },
-  { path: '/transport',     icon: Truck,           label: 'Transport' },
-  { path: '/profile',       icon: User,            label: 'Profile'   },
+  { path: '/dashboard',     icon: Sprout,          labelKey: 'nav.dashboard' },
+  { path: '/price-tracker', icon: TrendingUp,      labelKey: 'nav.prices'    },
+  { path: '/marketplace',   icon: ShoppingCart,    labelKey: 'nav.marketplace' },
+  { path: '/transport',     icon: Truck,           labelKey: 'nav.transport' },
+  { path: '/profile',       icon: User,            labelKey: 'nav.profile'   },
 ];
 
 const BUYER_NAV = [
-  { path: '/wholesaler',  icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/marketplace', icon: ShoppingCart,    label: 'Market'    },
-  { path: '/transport',   icon: Truck,           label: 'Transport' },
-  { path: '/ai-insights', icon: Bot,             label: 'AI'        },
-  { path: '/profile',     icon: User,            label: 'Profile'   },
+  { path: '/wholesaler',  icon: LayoutDashboard, labelKey: 'nav.dashboard'   },
+  { path: '/marketplace', icon: ShoppingCart,    labelKey: 'nav.marketplace' },
+  { path: '/transport',   icon: Truck,           labelKey: 'nav.transport'   },
+  { path: '/ai-insights', icon: Bot,             labelKey: 'nav.aiInsights'  },
+  { path: '/profile',     icon: User,            labelKey: 'nav.profile'     },
 ];
 
 const MIDDLEMAN_NAV = [
-  { path: '/ai-insights', icon: Bot,             label: 'AI'        },
-  { path: '/marketplace', icon: ShoppingCart,    label: 'Market'    },
-  { path: '/wholesaler',  icon: LayoutDashboard, label: 'Wholesale' },
-  { path: '/help',        icon: HelpCircle,      label: 'Help'      },
-  { path: '/profile',     icon: User,            label: 'Profile'   },
+  { path: '/ai-insights', icon: Bot,             labelKey: 'nav.aiInsights'  },
+  { path: '/marketplace', icon: ShoppingCart,    labelKey: 'nav.marketplace' },
+  { path: '/wholesaler',  icon: LayoutDashboard, labelKey: 'roles.wholesaler'},
+  { path: '/help',        icon: HelpCircle,      labelKey: 'nav.help'        },
+  { path: '/profile',     icon: User,            labelKey: 'nav.profile'     },
 ];
 
 export default function BottomNav() {
   const { user } = useApp();
+  const { t } = useTranslation();
   const location = useLocation();
   const role = user?.role || 'farmer';
 
@@ -49,7 +51,7 @@ export default function BottomNav() {
       display: 'flex',
       height: 60,
     }} className="show-mobile">
-      {items.map(({ path, icon: Icon, label }) => {
+      {items.map(({ path, icon: Icon, labelKey }) => {
         const active = location.pathname === path;
         return (
           <Link key={path} to={path} style={{
@@ -72,7 +74,7 @@ export default function BottomNav() {
               fontSize: '0.5625rem', fontWeight: active ? 700 : 500,
               lineHeight: 1, letterSpacing: '0.01em',
             }}>
-              {label}
+              {t(labelKey)}
             </span>
           </Link>
         );
