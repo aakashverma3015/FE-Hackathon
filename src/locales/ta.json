@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "உங்கள் பயிர், உங்கள் விலை",
+    "description": "நேரடியாக சந்தைக்கு — இடைத்தரகர்கள் இல்லாமல்",
+    "stats": {
+      "farmers": "விவசாயிகள்",
+      "saved": "சேமிக்கப்பட்டது",
+      "buyers": "சரிபார்க்கப்பட்ட வாங்குபவர்",
+      "states": "மாநிலங்கள்"
+    }
+  },
+  "trust": {
+    "apmc": "APMC சரிபார்க்கப்பட்டது",
+    "iso": "ISO சான்றிதழ்",
+    "secure": "பாதுகாப்பான தரவு",
+    "ai": "AI-ஆதரவுடன்",
+    "madeInIndia": "இந்தியாவில் தயாரிக்கப்பட்டது"
+  },
+  "roles": {
+    "farmer": "விவசாயி",
+    "buyer": "வாங்குபவர்",
+    "middleman": "முகவர் / இடைத்தரகர்",
+    "wholesaler": "மொத்த வியாபாரி",
+    "retailer": "சில்லறை வியாபாரி",
+    "coldStorage": "குளிர் சேமிப்பு",
+    "transport": "போக்குவரத்து",
+    "exporter": "ஏற்றுமதியாளர்"
+  },
+  "auth": {
+    "welcomeBack": "மீண்டும் வரவேற்கிறோம்! 🙏",
+    "loginPrompt": "உங்கள் Aarohan Agri கணக்கில் உள்நுழையவும்",
+    "mobileOtp": "மொபைல் OTP",
+    "email": "மின்னஞ்சல்",
+    "mobilePlaceholder": "10 இலக்க எண்",
+    "sendOtp": "OTP அனுப்பு",
+    "sending": "அனுப்பப்படுகிறது...",
+    "enterOtp": "OTP-ஐ உள்ளிடவும்",
+    "verifyLogin": "சரிபார்த்து உள்நுழையவும்",
+    "verifying": "சரிபார்க்கப்படுகிறது...",
+    "password": "கடவுச்சொல்",
+    "loginBtn": "உள்நுழை",
+    "loggingIn": "உள்நுழைகிறது...",
+    "voiceLogin": "🎤 குரல் மூலம் உள்நுழை",
+    "newHere": "புதியவரா?",
+    "register": "பதிவு செய்",
+    "alreadyHaveAccount": "ஏற்கனவே கணக்கு உள்ளதா?",
+    "whoAreYou": "நீங்கள் யார்?",
+    "registerFarmer": "விவசாயி பதிவு",
+    "registerBuyer": "வாங்குபவர் பதிவு",
+    "registerAgent": "முகவர் பதிவு",
+    "fullName": "முழு பெயர் *",
+    "village": "கிராமம் / நகரம் *",
+    "state": "மாநிலம் *",
+    "crops": "பயிர்கள் (கற்புள்ளியால் பிரிக்கவும்)",
+    "company": "நிறுவனம்",
+    "gst": "GST எண்",
+    "aadhaar": "ஆதார் (கடைசி 4 இலக்கம்)",
+    "confirmPass": "கடவுச்சொல்லை சரிபார்க்கவும் *",
+    "agreeTerms": "விதிமுறைகள் மற்றும் நிபந்தனைகளை ஏற்கிறேன்",
+    "submitReg": "பதிவு வெற்றிகரம்",
+    "success": "வரவேற்கிறோம்!",
+    "redirecting": "உள்நுழைகிறது..."
+  },
+  "nav": {
+    "home": "முகப்பு",
+    "dashboard": "டாஷ்போர்டு",
+    "marketplace": "சந்தை",
+    "coldStorage": "குளிர் சேமிப்பு",
+    "transport": "போக்குவரத்து",
+    "labTesting": "ஆய்வக சோதனை",
+    "aiInsights": "AI பகுப்பாய்வு",
+    "help": "உதவி",
+    "profile": "சுயவிவரம்",
+    "logout": "வெளியேறு"
+  },
+  "dashboard": {
+    "namaste": "வணக்கம்",
+    "certifiedFarmer": "சான்றளிக்கப்பட்ட விவசாயி",
+    "profileComplete": "சுயவிவரம் முடிந்தது",
+    "sellMiddleman": "இடைத்தரகர் மூலம் விற்கவும்",
+    "sellDirect": "நேரடியாக மொத்த வியாபாரிக்கு விற்கவும்",
+    "recommended": "பரிந்துரைக்கப்படுகிறது",
+    "profit": "லாபம்",
+    "perQuintal": "ஒரு குவிண்டாலுக்கு",
+    "livePrices": "நேரலை சந்தை விலைகள்",
+    "priceAlert": "விலை ₹",
+    "bestTimeSell": "-ஐ தொட்டது — விற்க சிறந்த நேரம்!"
+  },
+  "actions": {
+    "listCrop": "என் பயிரை பட்டியலிடு",
+    "findStorage": "பனிக்கிடங்கைத் தேடு",
+    "bookTransport": "போக்குவரத்தை முன் பதிவு செய்",
+    "bookLabTest": "ஆய்வக சோதனைக்கு பதிவு செய்",
+    "helpline": "உதவி எண்கள்"
+  }
+}

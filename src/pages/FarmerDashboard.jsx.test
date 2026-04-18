@@ -1,0 +1,352 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useApp } from '../context/AppContext';
+import { useForecast } from '../hooks/useForecast';
+import { useCountUp } from '../hooks/useCountUp';
+import { useTimeAgo } from '../hooks/useTimeAgo';
+import { usePrevious } from '../hooks/usePrevious';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart
+} from 'recharts';
+import {
+  TrendingUp, TrendingDown, Bell, Package, Snowflake, Truck, FlaskConical, Phone,
+  ChevronRight, ArrowUpRight, Star, Zap
+} from 'lucide-react';
+import toast from 'react-hot-toast';
+
+const QUICK_ACTIONS = [
+  { icon: Package,      label: 'List My Crop',   emoji: '📦', path: '/marketplace',   color: '#1B5E20' },
+  { icon: TrendingUp,   label: 'View Prices',    emoji: '📈', path: '/price-tracker', color: '#2196F3' },
+  { icon: Snowflake,    label: 'Cold Storage',   emoji: '🧊', path: '/cold-storage',  color: '#0288D1' },
+  { icon: Truck,        label: 'Book Transport', emoji: '🚛', path: '/transport',     color: '#E65100' },
+  { icon: FlaskConical, label: 'Book Lab Test',  emoji: '🧪', path: '/lab-testing',   color: '#6A1B9A' },
+];
+
+// Native language greetings map
+const GREETINGS = {
+  hi: 'नमस्ते',
+  en: 'Namaste',
+  mr: 'नमस्कार',
+  pa: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ',
+  gu: 'નમસ્તે',
+  ta: 'வணக்கம்',
+  te: 'నమస్కారం',
+  kn: 'ನಮಸ್ಕಾರ',
+  bn: 'নমস্কার',
+  or: 'ନମସ୍କାର',
+};
+
+export default function FarmerDashboard() {
+  const { t, i18n } = useTranslation();
+  const { user, mandiPrices, notifications } = useApp();
+  const navigate = useNavigate();
+  const [chartRange, setChartRange] = useState('7d');
+  const { history, currentPrice } = useForecast('Soybean', chartRange === '30d' ? 30 : 7);
+  const [showAlert, setShowAlert] = useState(true);
+
+  // Real-time GPS location
+  const [locationText, setLocationText] = useState('Locating...');
+  useEffect(() => {
+    if (!navigator.geolocation) { setLocationText('India'); return; }
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+          const data = await res.json();
+          const city = data.address?.city || data.address?.town || data.address?.village || data.address?.county || '';
+          const state = data.address?.state || '';
+          setLocationText(`${city}${city && state ? ', ' : ''}${state}`);
+        } catch { setLocationText('India'); }
+      },
+      () => setLocationText('India') // permission denied fallback
+    );
+  }, []);
+
+  // Advanced Layer 4 UX
+  const { count: animatedPrice } = useCountUp(currentPrice || 5200, 1500);
+  const previousPrice = usePrevious(currentPrice);
+  const priceFlashClass = previousPrice && currentPrice !== previousPrice 
+    ? (currentPrice > previousPrice ? 'flash-green' : 'flash-red') 
+    : '';
+  
+  // Find latest update time from mandiPrices array
+  const lastUpdated = mandiPrices && mandiPrices.length > 0 ? mandiPrices[0].lastUpdate : Date.now();
+  const timeText = useTimeAgo(lastUpdated);
+
+  const middlemanProfit = Math.round((currentPrice || 5200) * 0.85); // 15% deductions
+  const directProfit    = currentPrice || 5200;
+  const saving          = directProfit - middlemanProfit;
+  
+  const baseChartData = history && history.length > 0 
+    ? history.map(h => ({ day: h.label || h.date, price: h.price }))
+    : [];
+
+  // Live realtime chart — seeds from history, appends new ticks every 30s
+  const [liveChartData, setLiveChartData] = useState([]);
+  useEffect(() => {
+    if (baseChartData.length > 0) setLiveChartData(baseChartData);
+  }, [history]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLiveChartData(prev => {
+        if (prev.length === 0) return prev;
+        const last = prev[prev.length - 1];
+        const drift = (Math.random() - 0.48) * 60; // slight upward bias
+        const newPrice = Math.max(4000, Math.round(last.price + drift));
+        const now = new Date();
+        const label = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+        const next = [...prev.slice(-13), { day: label, price: newPrice }]; // keep last 14 points
+        return next;
+      });
+    }, 30000); // every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div style={{ background: 'var(--surface-bg)', minHeight: '100vh', paddingBottom: 32 }}>
+      <div className="container" style={{ paddingTop: 24 }}>
+
+        {/* Welcome Banner */}
+        <div style={{
+          background: 'linear-gradient(135deg, #1B5E20 0%, #2E7D32 60%, #388E3C 100%)',
+          borderRadius: 20, padding: '24px 28px', marginBottom: 24, position: 'relative', overflow: 'hidden',
+        }}>
+          <div style={{ position: 'absolute', right: 20, top: -10, fontSize: 80, opacity: 0.12 }}>🌾</div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
+            <div>
+              <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem', fontWeight: 500, marginBottom: 6 }}>
+                📍 {locationText} · Today
+              </div>
+              <h1 style={{ color: 'white', fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.6rem', marginBottom: 6 }}>
+                {GREETINGS[i18n.language] || 'Namaste'}, {user?.name?.split(' ')[0] || 'Farmer'} 🌾
+              </h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{
+                  background: '#FF8F00', color: 'white', padding: '3px 10px',
+                  borderRadius: 100, fontSize: '0.75rem', fontWeight: 700,
+                }}>✅ {t('certifiedFarmer')}</span>
+                <span style={{
+                  background: 'rgba(255,255,255,0.2)', color: 'white', padding: '3px 10px',
+                  borderRadius: 100, fontSize: '0.75rem', fontWeight: 600,
+                }}>⭐ Top Seller</span>
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', marginBottom: 4 }}>
+                {t('dashboard.profileComplete')}: {user?.profileComplete}%
+              </div>
+              <div style={{ width: 120, height: 8, background: 'rgba(255,255,255,0.2)', borderRadius: 100, overflow: 'hidden' }}>
+                <div style={{ width: `${user?.profileComplete}%`, height: '100%', background: '#FFD54F', borderRadius: 100, transition: 'width 0.6s ease' }} />
+              </div>
+              <Link to="/profile" style={{ color: '#FFD54F', fontSize: '0.75rem', fontWeight: 600, textDecoration: 'none', display: 'block', marginTop: 6 }}>
+                Complete Profile →
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Fair Price Alert */}
+        {showAlert && (
+          <div style={{
+            background: 'linear-gradient(135deg, #FFF8E1, #FFF3E0)', border: '2px solid #FF8F00',
+            borderRadius: 14, padding: '14px 18px', marginBottom: 20,
+            display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer',
+          }} onClick={() => toast.success('Navigating to AI Insights...')}>
+            <div style={{ fontSize: 28, animation: 'pulse 2s infinite' }}>🔔</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 700, color: '#E65100', fontSize: '0.9rem' }}>Fair Price Alert! 🔔</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                Soybean {t('dashboard.priceAlert')} ₹{(currentPrice || 5200).toLocaleString()} — {t('dashboard.bestTimeSell')}
+              </div>
+            </div>
+            <button onClick={(e) => { e.stopPropagation(); setShowAlert(false); }} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 4, minHeight: 36 }}>✕</button>
+          </div>
+        )}
+
+        {/* Profit Comparison — Most Prominent */}
+        <div style={{
+          background: 'var(--card-bg)', borderRadius: 20, padding: 24, marginBottom: 24,
+          boxShadow: '0 4px 24px rgba(27,94,32,0.12)', border: '2px solid #E8F5E9',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+            <div style={{ fontSize: 24 }}>💰</div>
+            <div>
+              <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: '#1B5E20' }}>{t('dashboard.profit')}</h2>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Based on today's Indore Mandi rate</div>
+            </div>
+            <div style={{ marginLeft: 'auto' }}>
+              <span style={{ background: '#E8F5E9', color: '#1B5E20', padding: '4px 10px', borderRadius: 8, fontSize: '0.75rem', fontWeight: 700 }}>
+                Live Rate
+              </span>
+            </div>
+          </div>
+
+          {/* Middleman Option */}
+          <div style={{ padding: '14px 18px', borderRadius: 12, border: '2px solid #e2e8f0', marginBottom: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.95rem' }}>
+                  🔗 {t('dashboard.sellMiddleman')}
+                </div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                  After deductions & commission
+                </div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', color: 'var(--text-muted)' }}>
+                  ₹{middlemanProfit.toLocaleString()}
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t('dashboard.perQuintal')}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Direct Sale Option */}
+          <div style={{ padding: '14px 18px', borderRadius: 12, border: '2px solid #1B5E20', background: '#E8F5E9', position: 'relative' }}>
+            <div style={{ position: 'absolute', top: -10, right: 16 }}>
+              <span style={{ background: '#1B5E20', color: 'white', padding: '2px 12px', borderRadius: 100, fontSize: '0.7rem', fontWeight: 700 }}>
+                ⭐ {t('dashboard.recommended')}
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontWeight: 700, color: '#1B5E20', fontSize: '0.95rem' }}>
+                  🎯 {t('dashboard.sellDirect')}
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#388E3C', marginTop: 2 }}>
+                  Zero commission · Full payment
+                </div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div className={priceFlashClass} style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.6rem', color: '#1B5E20', borderRadius: 8, padding: '0 4px', transition: 'background-color 0.2s', display: 'inline-block' }}>
+                  ₹{animatedPrice.toLocaleString()}
+                </div>
+                <div style={{ fontSize: '0.75rem', color: '#388E3C' }}>{t('dashboard.perQuintal')}</div>
+                <div style={{ fontSize: '0.65rem', color: '#4CAF50', marginTop: 2 }}>⏱️ Updated {timeText}</div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{
+            marginTop: 14, background: 'var(--gold-pale)', borderRadius: 10, padding: '10px 16px',
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}>
+            <Zap size={16} color="#FF8F00" />
+            <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#E65100' }}>
+              Save extra <strong>₹{saving.toLocaleString()}/quintal</strong> by selling directly! On 100 qtl → ₹{(saving * 100).toLocaleString()} more profit
+            </span>
+          </div>
+          <button className="btn btn-primary btn-full" style={{ marginTop: 14 }} onClick={() => navigate('/marketplace')}>
+            📦 List My Crop Now — Maximize Profit
+          </button>
+        </div>
+
+        {/* Live Mandi Prices Ticker */}
+        <div style={{ background: 'var(--card-bg)', borderRadius: 16, marginBottom: 24, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
+            <div className="live-dot" />
+            <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1B5E20' }}>{t('dashboard.livePrices')}</span>
+            <Link to="/price-tracker" style={{ marginLeft: 'auto', fontSize: '0.78rem', color: '#1B5E20', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 3 }}>
+              Full Prices <ChevronRight size={14} />
+            </Link>
+          </div>
+          <div className="ticker-wrap" style={{ background: 'var(--surface-bg)' }}>
+            <div className="ticker-content">
+              {[...mandiPrices, ...mandiPrices].map((item, i) => (
+                <span key={i} style={{ marginRight: 48, fontSize: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontWeight: 700, color: '#1B5E20' }}>{t(item.cropKey)}</span>
+                  <span style={{ fontFamily: 'Poppins', fontWeight: 800, color: 'var(--text-primary)' }}>₹{item.price.toLocaleString()}</span>
+                  <span style={{ color: item.change >= 0 ? '#4CAF50' : '#F44336', fontWeight: 600 }}>
+                    {item.change >= 0 ? '▲' : '▼'} ₹{Math.abs(item.change)}
+                  </span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{item.mandi}</span>
+                  <span style={{ color: '#e2e8f0' }}>|</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+
+        {/* CTA to Full Price Dashboard */}
+        <Link to="/price-tracker" style={{ textDecoration: 'none', display: 'block', marginBottom: 24 }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            background: 'linear-gradient(135deg, #E8F5E9, #C8E6C9)',
+            borderRadius: 14, padding: '14px 20px', border: '1px solid #A5D6A7',
+            transition: 'all 0.2s',
+          }}
+            onMouseEnter={e => e.currentTarget.style.background = 'linear-gradient(135deg, #C8E6C9, #A5D6A7)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'linear-gradient(135deg, #E8F5E9, #C8E6C9)'}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: '1.5rem' }}>📈</span>
+              <div>
+                <div style={{ fontWeight: 700, color: '#1B5E20', fontSize: '0.9rem' }}>Open Full Market Price Dashboard</div>
+                <div style={{ fontSize: '0.75rem', color: '#388E3C' }}>7D · 30D · 90D charts · AI forecast · Price alerts</div>
+              </div>
+            </div>
+            <ChevronRight size={20} color="#1B5E20" />
+          </div>
+        </Link>
+
+        {/* Quick Actions */}
+        <div style={{ marginBottom: 24 }}>
+          <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', marginBottom: 14 }}>
+            ⚡ Quick Actions
+          </h3>
+          <div className="grid-5" style={{ gap: 10 }}>
+            {QUICK_ACTIONS.map(({ icon: Icon, label, emoji, path, color }) => (
+              <Link key={path} to={path} style={{ textDecoration: 'none' }}>
+                <div style={{
+                  background: 'var(--card-bg)', borderRadius: 14, padding: '16px 8px', textAlign: 'center',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '2px solid transparent',
+                  cursor: 'pointer', transition: 'all 0.2s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = color}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
+                >
+                  <div style={{ fontSize: 28, marginBottom: 8 }}>{emoji}</div>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.3 }}>{label}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Notifications Panel */}
+        <div style={{ background: 'var(--card-bg)', borderRadius: 16, padding: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)' }}>
+              🔔 Recent Activity
+            </h3>
+            <Link to="/ai-insights" style={{ fontSize: '0.8rem', color: '#1B5E20', fontWeight: 600, textDecoration: 'none' }}>
+              View All →
+            </Link>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {notifications.map(n => (
+              <div key={n.id} style={{
+                display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 16px',
+                background: n.read ? '#FAFAF7' : '#F1F8E9', borderRadius: 12,
+                border: `1px solid ${n.read ? '#f0f0f0' : '#C8E6C9'}`, cursor: 'pointer',
+              }}>
+                <div style={{ fontSize: 20, marginTop: 2 }}>
+                  {n.type === 'offer' ? '💼' : n.type === 'alert' ? '🔔' : n.type === 'transport' ? '🚛' : '🧪'}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '0.875rem', fontWeight: n.read ? 400 : 600, color: 'var(--text-primary)' }}>{n.text}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 3 }}>{n.time}</div>
+                </div>
+                {!n.read && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#4CAF50', flexShrink: 0, marginTop: 6 }} />}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

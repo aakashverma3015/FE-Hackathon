@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "আপনার ফসল, আপনার দাম",
+    "description": "সরাসরি বাজারে — মধ্যস্থতাকারী নেই, সরাসরি লাভ",
+    "stats": {
+      "farmers": "কৃষক",
+      "saved": "আর্থিক সাশ্রয়",
+      "buyers": "যাচাইকৃত ক্রেতা",
+      "states": "সক্রিয় রাজ্য"
+    }
+  },
+  "trust": {
+    "apmc": "APMC যাচাইকৃত",
+    "iso": "ISO প্রত্যয়িত",
+    "secure": "ডেটা সুরক্ষিত",
+    "ai": "AI-চালিত",
+    "madeInIndia": "মেড ইন ইন্ডিয়া"
+  },
+  "roles": {
+    "farmer": "কৃষক",
+    "buyer": "ক্রেতা",
+    "middleman": "এজেন্ট / দালাল",
+    "wholesaler": "পাইকারি বিক্রেতা",
+    "retailer": "খুচরা বিক্রেতা",
+    "coldStorage": "কোল্ড স্টোরেজ",
+    "transport": "পরিবহন",
+    "exporter": "রপ্তানিকারক"
+  },
+  "auth": {
+    "welcomeBack": "পুনরায় স্বাগতম! 🙏",
+    "loginPrompt": "আপনার Aarohan Agri অ্যাকাউন্টে লগইন করুন",
+    "mobileOtp": "মোবাইল OTP",
+    "email": "ইমেইল",
+    "mobilePlaceholder": "১০-সংখ্যার নম্বর",
+    "sendOtp": "OTP পাঠান",
+    "sending": "পাঠানো হচ্ছে...",
+    "enterOtp": "OTP লিখুন",
+    "verifyLogin": "যাচাই করুন এবং লগইন করুন",
+    "verifying": "যাচাই করা হচ্ছে...",
+    "password": "পাসওয়ার্ড",
+    "loginBtn": "লগইন",
+    "loggingIn": "লগইন হচ্ছে...",
+    "voiceLogin": "🎤 ভয়েস দিয়ে লগইন করুন",
+    "newHere": "নতুন সদস্য?",
+    "register": "নিবন্ধন করুন",
+    "alreadyHaveAccount": "ইতিমধ্যেই অ্যাকাউন্ট আছে?",
+    "whoAreYou": "আপনি কে?",
+    "registerFarmer": "কৃষক নিবন্ধন",
+    "registerBuyer": "ক্রেতা নিবন্ধন",
+    "registerAgent": "এজেন্ট নিবন্ধন",
+    "fullName": "সম্পূর্ণ নাম *",
+    "village": "গ্রাম / শহর *",
+    "state": "রাজ্য *",
+    "crops": "ফসল (কমা দিয়ে আলাদা করুন)",
+    "company": "কোম্পানি / ফার্ম",
+    "gst": "GST নম্বর",
+    "aadhaar": "আধার (শেষ ৪টি সংখ্যা)",
+    "confirmPass": "পাসওয়ার্ড নিশ্চিত করুন *",
+    "agreeTerms": "আমি নিয়ম ও শর্তাবলীতে সম্মত",
+    "submitReg": "নিবন্ধন সফল",
+    "success": "স্বাগতম!",
+    "redirecting": "লগইন হচ্ছে..."
+  },
+  "nav": {
+    "home": "হোম",
+    "dashboard": "ড্যাশবোর্ড",
+    "marketplace": "মার্কেটপ্লেস",
+    "coldStorage": "কোল্ড স্টোরেজ",
+    "transport": "পরিবহন",
+    "labTesting": "ল্যাব টেস্টিং",
+    "aiInsights": "AI ইনসাইটস",
+    "help": "সাহায্য",
+    "profile": "প্রোফাইল",
+    "logout": "লগ আউট"
+  },
+  "dashboard": {
+    "namaste": "নমস্কার",
+    "certifiedFarmer": "প্রত্যয়িত কৃষক",
+    "profileComplete": "প্রোফাইল সম্পূর্ণ",
+    "sellMiddleman": "দালালকে বিক্রি করুন",
+    "sellDirect": "সরাসরি পাইকারকে বিক্রি করুন",
+    "recommended": "প্রস্তাবিত",
+    "profit": "লাভ",
+    "perQuintal": "প্রতি কুইন্টাল",
+    "livePrices": "লাইভ বাজারের দাম",
+    "priceAlert": "এর দাম ₹",
+    "bestTimeSell": "এ পৌঁছেছে — বিক্রি করার সেরা সময়!"
+  },
+  "actions": {
+    "listCrop": "আমার ফসল তালিকাভুক্ত করুন",
+    "findStorage": "কোল্ড স্টোরেজ খুঁজুন",
+    "bookTransport": "পরিবহন বুক করুন",
+    "bookLabTest": "ল্যাব টেস্ট বুক করুন",
+    "helpline": "হেল্পলাইন"
+  }
+}

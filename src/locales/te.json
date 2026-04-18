@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "మీ పంట, మీ ధర",
+    "description": "నేరుగా మార్కెట్‌కు — దళారుల్లేకుండా, నేరుగా లాభం",
+    "stats": {
+      "farmers": "రైతులు",
+      "saved": "ఆదా అయింది",
+      "buyers": "ధృవీకరించబడిన కొనుగోలుదారులు",
+      "states": "సక్రియ రాష్ట్రాలు"
+    }
+  },
+  "trust": {
+    "apmc": "APMC ధృవీకరించబడింది",
+    "iso": "ISO సర్టిఫైడ్",
+    "secure": "సురక్షిత డేటా",
+    "ai": "AI-ఆధారితం",
+    "madeInIndia": "మేడ్ ఇన్ ఇండియా"
+  },
+  "roles": {
+    "farmer": "రైతు",
+    "buyer": "కొనుగోలుదారు",
+    "middleman": "ఏజెంట్ / దళారి",
+    "wholesaler": "టోకు వ్యాపారి",
+    "retailer": "చిల్లర వ్యాపారి",
+    "coldStorage": "కోల్డ్ స్టోరేజ్",
+    "transport": "రవాణా",
+    "exporter": "ఎగుమతిదారు"
+  },
+  "auth": {
+    "welcomeBack": "తిరిగి స్వాగతం! 🙏",
+    "loginPrompt": "మీ Aarohan Agri ఖాతాకు లాగిన్ చేయండి",
+    "mobileOtp": "మొబైల్ OTP",
+    "email": "ఇమెయిల్",
+    "mobilePlaceholder": "10-అంకెల సంఖ్య",
+    "sendOtp": "OTP పంపండి",
+    "sending": "పంపుతోంది...",
+    "enterOtp": "OTP నమోదు చేయండి",
+    "verifyLogin": "ధృవీకరించి లాగిన్ చేయండి",
+    "verifying": "ధృవీకరిస్తోంది...",
+    "password": "పాస్వర్డ్",
+    "loginBtn": "లాగిన్",
+    "loggingIn": "లాగిన్ అవుతోంది...",
+    "voiceLogin": "🎤 గాత్రంతో లాగిన్ చేయండి (Bol ke Login)",
+    "newHere": "కొత్తవారా?",
+    "register": "నమోదు చేసుకోండి",
+    "alreadyHaveAccount": "ఇప్పటికే ఖాతా ఉందా?",
+    "whoAreYou": "మీరు ఎవరు?",
+    "registerFarmer": "రైతు నమోదు",
+    "registerBuyer": "కొనుగోలుదారు నమోదు",
+    "registerAgent": "ఏజెంట్ నమోదు",
+    "fullName": "పూర్తి పేరు *",
+    "village": "గ్రామం / నగరం *",
+    "state": "రాష్ట్రం *",
+    "crops": "పంటలు (కామాతో వేరు చేయండి)",
+    "company": "కంపెనీ / సంస్థ",
+    "gst": "GST నంబర్",
+    "aadhaar": "ఆధార్ (చివరి 4)",
+    "confirmPass": "పాస్వర్డ్ నిర్ధారించండి *",
+    "agreeTerms": "నేను నియమ నిబంధనలు అంగీకరిస్తున్నాను",
+    "submitReg": "విజయవంతంగా నమోదైంది",
+    "success": "స్వాగతం!",
+    "redirecting": "లాగిన్ అవుతున్నారు..."
+  },
+  "nav": {
+    "home": "హోమ్",
+    "dashboard": "డాష్‌బోర్డ్",
+    "marketplace": "మార్కెట్",
+    "coldStorage": "కోల్డ్ స్టోరేజ్",
+    "transport": "రవాణా",
+    "labTesting": "ల్యాబ్ టెస్టింగ్",
+    "aiInsights": "AI విశ్లేషణలు",
+    "help": "సహాయం",
+    "profile": "ప్రొఫైల్",
+    "logout": "లాగ్ అవుట్"
+  },
+  "dashboard": {
+    "namaste": "నమస్కారం",
+    "certifiedFarmer": "ధృవీకరించబడిన రైతు",
+    "profileComplete": "ప్రొఫైల్ పూర్తయింది",
+    "sellMiddleman": "దళారికి విక్రయించండి",
+    "sellDirect": "నేరుగా టోకు వ్యాపారికి విక్రయించండి",
+    "recommended": "సూచించబడింది",
+    "profit": "లాభం",
+    "perQuintal": "క్వింటాల్‌కు",
+    "livePrices": "లైవ్ మార్కెట్ ధరలు",
+    "priceAlert": "ధర ₹",
+    "bestTimeSell": "కు చేరుకుంది — విక్రయించడానికి సరైన సమయం!"
+  },
+  "actions": {
+    "listCrop": "నా పంటను ప్రకటించండి",
+    "findStorage": "కోల్డ్ స్టోరేజ్ వెతకండి",
+    "bookTransport": "రవాణాను బుక్ చేయండి",
+    "bookLabTest": "ల్యాబ్ టెస్ట్ బుక్ చేయండి",
+    "helpline": "హెల్ప్‌లైన్"
+  }
+}

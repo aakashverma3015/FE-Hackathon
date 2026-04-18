@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "Your Crop, Your Price",
+    "description": "Connecting Farms to Markets — Empowering the Entire Agricultural Ecosystem",
+    "stats": {
+      "farmers": "Farmers",
+      "saved": "Saved",
+      "buyers": "Verified Buyers",
+      "states": "Active States"
+    }
+  },
+  "trust": {
+    "apmc": "APMC Verified",
+    "iso": "ISO Certified",
+    "secure": "Data Secure",
+    "ai": "AI-Powered",
+    "madeInIndia": "Made in India"
+  },
+  "roles": {
+    "farmer": "Farmer",
+    "buyer": "Buyer",
+    "middleman": "Middleman/Agent",
+    "wholesaler": "Wholesaler",
+    "retailer": "Retailer",
+    "coldStorage": "Cold Storage",
+    "transport": "Transport",
+    "exporter": "Exporter"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back! 🙏",
+    "loginPrompt": "Login to your Aarohan Agri account",
+    "mobileOtp": "Mobile OTP",
+    "email": "Email",
+    "mobilePlaceholder": "10-digit number",
+    "sendOtp": "Send OTP",
+    "sending": "Sending...",
+    "enterOtp": "Enter OTP",
+    "verifyLogin": "Verify & Login",
+    "verifying": "Verifying...",
+    "password": "Password",
+    "loginBtn": "Login",
+    "loggingIn": "Logging in...",
+    "voiceLogin": "🎤 Voice Login (Speak to Login)",
+    "newHere": "New here?",
+    "register": "Register",
+    "alreadyHaveAccount": "Already have an account?",
+    "whoAreYou": "Who are you?",
+    "registerFarmer": "Farmer Registration",
+    "registerBuyer": "Buyer Registration",
+    "registerAgent": "Agent Registration",
+    "fullName": "Full Name *",
+    "village": "Village / City *",
+    "state": "State *",
+    "crops": "Crops (comma separated)",
+    "company": "Company / Firm",
+    "gst": "GST Number",
+    "aadhaar": "Aadhaar (last 4)",
+    "confirmPass": "Confirm Password *",
+    "agreeTerms": "I agree to the Terms & Conditions and Privacy Policy",
+    "submitReg": "Register Successfully",
+    "success": "Welcome!",
+    "redirecting": "Logging you in..."
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "marketplace": "Marketplace",
+    "coldStorage": "Cold Storage",
+    "transport": "Transport",
+    "labTesting": "Lab Testing",
+    "aiInsights": "AI Insights",
+    "help": "Help & Support",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "namaste": "Namaste",
+    "certifiedFarmer": "Certified Farmer",
+    "profileComplete": "Profile Complete",
+    "sellMiddleman": "Sell to Middleman",
+    "sellDirect": "Sell Directly to Wholesaler",
+    "recommended": "Recommended",
+    "profit": "Profit",
+    "perQuintal": "per quintal",
+    "livePrices": "Live Mandi Prices",
+    "priceAlert": "price hit ₹",
+    "bestTimeSell": "Best time to sell!"
+  },
+  "actions": {
+    "listCrop": "List My Crop",
+    "findStorage": "Find Cold Storage",
+    "bookTransport": "Book Transport",
+    "bookLabTest": "Book Lab Test",
+    "helpline": "Helpline"
+  }
+}

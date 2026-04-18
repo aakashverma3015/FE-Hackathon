@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "अपनी फसल, अपना दाम",
+    "description": "खेतों को बाज़ार से जोड़ना — पूरे कृषि तंत्र को सशक्त बनाना",
+    "stats": {
+      "farmers": "किसान",
+      "saved": "बचाए",
+      "buyers": "सत्यापित खरीदार",
+      "states": "राज्य सक्रिय"
+    }
+  },
+  "trust": {
+    "apmc": "APMC सत्यापित",
+    "iso": "ISO प्रमाणित",
+    "secure": "डेटा सुरक्षित",
+    "ai": "AI-संचालित",
+    "madeInIndia": "भारत में निर्मित"
+  },
+  "roles": {
+    "farmer": "किसान",
+    "buyer": "खरीदार",
+    "middleman": "एजेंट / दलाल",
+    "wholesaler": "थोक व्यापारी",
+    "retailer": "फुटकर व्यापारी",
+    "coldStorage": "शीत भंडार",
+    "transport": "परिवहन",
+    "exporter": "निर्यातकर्ता"
+  },
+  "auth": {
+    "welcomeBack": "फिर से स्वागत है! 🙏",
+    "loginPrompt": "अपने Aarohan Agri खाते में लॉगिन करें",
+    "mobileOtp": "मोबाइल OTP",
+    "email": "ईमेल",
+    "mobilePlaceholder": "10 अंकों का नंबर",
+    "sendOtp": "OTP भेजें",
+    "sending": "भेज रहे हैं...",
+    "enterOtp": "OTP दर्ज करें",
+    "verifyLogin": "सत्यापित करें और लॉगिन करें",
+    "verifying": "सत्यापित हो रहा है...",
+    "password": "पासवर्ड",
+    "loginBtn": "लॉगिन करें",
+    "loggingIn": "लॉगिन हो रहा है...",
+    "voiceLogin": "🎤 आवाज़ से लॉगिन (बोल के लॉगिन करो)",
+    "newHere": "नए हैं?",
+    "register": "पंजीकरण (Register) करें",
+    "alreadyHaveAccount": "पहले से खाता है?",
+    "whoAreYou": "आप कौन हैं?",
+    "registerFarmer": "किसान पंजीकरण",
+    "registerBuyer": "खरीदार पंजीकरण",
+    "registerAgent": "एजेंट पंजीकरण",
+    "fullName": "पूरा नाम *",
+    "village": "गांव / शहर *",
+    "state": "राज्य *",
+    "crops": "फसलें (अल्पविराम से अलग)",
+    "company": "कंपनी / फर्म",
+    "gst": "GST नंबर",
+    "aadhaar": "आधार (अंतिम 4 अंक)",
+    "confirmPass": "पासवर्ड की पुष्टि करें *",
+    "agreeTerms": "मैं नियम व शर्तों और गोपनीयता नीति से सहमत हूं",
+    "submitReg": "पंजीकरण सफल",
+    "success": "स्वागत है!",
+    "redirecting": "लॉगिन हो रहा है..."
+  },
+  "nav": {
+    "home": "होम",
+    "dashboard": "डैशबोर्ड",
+    "marketplace": "बाज़ार",
+    "coldStorage": "शीत भंडार",
+    "transport": "परिवहन",
+    "labTesting": "लैब परीक्षण",
+    "aiInsights": "AI अंतर्दृष्टि",
+    "help": "सहायता",
+    "profile": "प्रोफ़ाइल",
+    "logout": "लॉग आउट"
+  },
+  "dashboard": {
+    "namaste": "नमस्ते",
+    "certifiedFarmer": "प्रमाणित किसान",
+    "profileComplete": "प्रोफ़ाइल पूर्ण",
+    "sellMiddleman": "बिचौलिए को बेचें",
+    "sellDirect": "सीधे थोक व्यापारी को बेचें",
+    "recommended": "अनुशंसित",
+    "profit": "लाभ",
+    "perQuintal": "प्रति क्विंटल",
+    "livePrices": "लाइव मंडी भाव",
+    "priceAlert": "का भाव ₹",
+    "bestTimeSell": "पहुंचा — बेचने का सही समय!"
+  },
+  "actions": {
+    "listCrop": "फ़सल सूचीबद्ध करें",
+    "findStorage": "शीत भंडार खोजें",
+    "bookTransport": "परिवहन बुक करें",
+    "bookLabTest": "लैब परीक्षण बुक करें",
+    "helpline": "हेल्पलाइन"
+  }
+}

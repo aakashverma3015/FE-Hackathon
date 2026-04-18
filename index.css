@@ -1,0 +1,8 @@
+
+
+@keyframes flashGreen { 0% { background-color: #A5D6A7; } 100% { background-color: transparent; } }
+.flash-green { animation: flashGreen 1s ease-out; }
+
+@keyframes flashRed { 0% { background-color: #EF9A9A; } 100% { background-color: transparent; } }
+.flash-red { animation: flashRed 1s ease-out; }
+

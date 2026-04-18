@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "ଆପଣଙ୍କ ଫସଲ, ଆପଣଙ୍କ ଦାମ",
+    "description": "ସିଧା ବଜାରକୁ — ମଧ୍ୟସ୍ଥି ନାହାଁନ୍ତି, ସିଧା ଲାଭ",
+    "stats": {
+      "farmers": "ଚାଷୀ",
+      "saved": "ସଞ୍ଚୟ",
+      "buyers": "ଯାଞ୍ଚ ହୋଇଥିବା କ୍ରେତା",
+      "states": "ସକ୍ରିୟ ରାଜ୍ୟ"
+    }
+  },
+  "trust": {
+    "apmc": "APMC ଯାଞ୍ଚ ହୋଇଛି",
+    "iso": "ISO ପ୍ରମାଣିତ",
+    "secure": "ସୁରକ୍ଷିତ ଡାଟା",
+    "ai": "AI-ଆଧାରିତ",
+    "madeInIndia": "ମେକ ଇନ ଇଣ୍ଡିଆ"
+  },
+  "roles": {
+    "farmer": "ଚାଷୀ",
+    "buyer": "କ୍ରେତା",
+    "middleman": "ଏଜେଣ୍ଟ / ଦଲାଲ",
+    "wholesaler": "ହୋଲସେଲର",
+    "retailer": "ଖୁଚୁରା ବ୍ୟବସାୟୀ",
+    "coldStorage": "ଶୀତଳ ଭଣ୍ଡାର",
+    "transport": "ପରିବହନ",
+    "exporter": "ରପ୍ତାନିକାରୀ"
+  },
+  "auth": {
+    "welcomeBack": "ପୁଣି ସ୍ଵାଗତ! 🙏",
+    "loginPrompt": "ଆପଣଙ୍କ Aarohan Agri ଖାତାକୁ ଲଗଇନ୍ କରନ୍ତୁ",
+    "mobileOtp": "ମୋବାଇଲ୍ OTP",
+    "email": "ଇମେଲ୍",
+    "mobilePlaceholder": "୧୦-ଅଙ୍କ ବିଶିଷ୍ଟ ନମ୍ବର",
+    "sendOtp": "OTP ପଠାନ୍ତୁ",
+    "sending": "ପଠାଯାଉଛି...",
+    "enterOtp": "OTP ଭରନ୍ତୁ",
+    "verifyLogin": "ଯାଞ୍ଚ କରି ଲଗଇନ୍ କରନ୍ତୁ",
+    "verifying": "ଯାଞ୍ଚ କରାଯାଉଛି...",
+    "password": "ପାସୱାର୍ଡ",
+    "loginBtn": "ଲଗଇନ୍",
+    "loggingIn": "ଲଗଇନ୍ ହେଉଛି...",
+    "voiceLogin": "🎤 କହିକି ଲଗଇନ୍ କରନ୍ତୁ",
+    "newHere": "ନୂଆ ଆସିଛନ୍ତି?",
+    "register": "ପଞ୍ଜିକରଣ କରନ୍ତୁ",
+    "alreadyHaveAccount": "ପୂର୍ବରୁ ଆକାଉଣ୍ଟ ଅଛି କି?",
+    "whoAreYou": "ଆପଣ କିଏ?",
+    "registerFarmer": "ଚାଷୀ ପଞ୍ଜିକରଣ",
+    "registerBuyer": "କ୍ରେତା ପଞ୍ଜିକରଣ",
+    "registerAgent": "ଏଜେଣ୍ଟ ପଞ୍ଜିକରଣ",
+    "fullName": "ପୂରା ନାମ *",
+    "village": "ଗାଁ / ସହର *",
+    "state": "ରାଜ୍ୟ *",
+    "crops": "ଫସଲ (କମା ଦେଇ ଲେଖନ୍ତୁ)",
+    "company": "କମ୍ପାନୀ / ଫାର୍ମ",
+    "gst": "GST ନମ୍ବର",
+    "aadhaar": "ଆଧାର (ଶେଷ ୪ ଅଙ୍କ)",
+    "confirmPass": "ପାସୱାର୍ଡ ନିଶ୍ଚିତ କରନ୍ତୁ *",
+    "agreeTerms": "ମୁଁ ନିୟମ ଏବଂ ସର୍ତ୍ତରେ ରାଜି ଅଛି",
+    "submitReg": "ପଞ୍ଜିକରଣ ସଫଳ ହେଲା",
+    "success": "ସ୍ଵାଗତମ୍!",
+    "redirecting": "ଲଗଇନ୍ କରାଯାଉଛି..."
+  },
+  "nav": {
+    "home": "ହୋମ୍",
+    "dashboard": "ଡ୍ୟାସବୋର୍ଡ",
+    "marketplace": "ମାର୍କେଟପ୍ଲେସ",
+    "coldStorage": "ଶୀତଳ ଭଣ୍ଡାର",
+    "transport": "ପରିବହନ",
+    "labTesting": "ଲ୍ୟାବ୍ ଟେଷ୍ଟିଂ",
+    "aiInsights": "AI ବିଶ୍ଳେଷଣ",
+    "help": "ସାହାଯ୍ୟ",
+    "profile": "ପ୍ରୋଫାଇଲ୍",
+    "logout": "ଲଗ୍ ଆଉଟ୍"
+  },
+  "dashboard": {
+    "namaste": "ନମସ୍କାର",
+    "certifiedFarmer": "ପ୍ରମାଣିତ ଚାଷୀ",
+    "profileComplete": "ପ୍ରୋଫାଇଲ୍ ସମ୍ପୂର୍ଣ୍ଣ",
+    "sellMiddleman": "ଦଲାଲଙ୍କୁ ବିକ୍ରି କରନ୍ତୁ",
+    "sellDirect": "ସିଧାସଳଖ ହୋଲସେଲରଙ୍କୁ ବିକ୍ରି କରନ୍ତୁ",
+    "recommended": "ପରାମର୍ଶିତ",
+    "profit": "ଲାଭ",
+    "perQuintal": "ପ୍ରତି କ୍ୱିଣ୍ଟାଲ୍",
+    "livePrices": "ବର୍ତ୍ତମାନର ବଜାର ଦର",
+    "priceAlert": "ଦର ₹",
+    "bestTimeSell": "ରେ ପହଞ୍ଚିଛି — ବିକ୍ରି କରିବାର ସଠିକ୍ ସମୟ!"
+  },
+  "actions": {
+    "listCrop": "ମୋ ଫସଲ ତାଲିକା କରନ୍ତୁ",
+    "findStorage": "ଶୀତଳ ଭଣ୍ଡାର ଖୋଜନ୍ତୁ",
+    "bookTransport": "ଟ୍ରାନ୍ସପୋର୍ଟ ବୁକ୍ କରନ୍ତୁ",
+    "bookLabTest": "ଲ୍ୟାବ୍ ଟେଷ୍ଟ ବୁକ୍ କରନ୍ତୁ",
+    "helpline": "ହେଲ୍ପଲାଇନ୍"
+  }
+}

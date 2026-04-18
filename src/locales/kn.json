@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "ನಿಮ್ಮ ಬೆಳೆ, ನಿಮ್ಮ ಬೆಲೆ",
+    "description": "ನೇರ ಮಾರುಕಟ್ಟೆಗೆ — ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ, ನೇರ ಲಾಭ",
+    "stats": {
+      "farmers": "ರೈತರು",
+      "saved": "ಉಳಿತಾಯ",
+      "buyers": "ಪರಿಶೀಲಿಸಿದ ಖರೀದಿದಾರರು",
+      "states": "ಸಕ್ರಿಯ ರಾಜ್ಯಗಳು"
+    }
+  },
+  "trust": {
+    "apmc": "APMC ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
+    "iso": "ISO ಪ್ರಮಾಣೀಕೃತ",
+    "secure": "ಸುರಕ್ಷಿತ ಡೇಟಾ",
+    "ai": "AI-ಆಧಾರಿತ",
+    "madeInIndia": "ಮೇಡ್ ಇನ್ ಇಂಡಿಯಾ"
+  },
+  "roles": {
+    "farmer": "ರೈತ",
+    "buyer": "ಖರೀದಿದಾರ",
+    "middleman": "ಏಜೆಂಟ್ / ದಲ್ಲಾಳಿ",
+    "wholesaler": "ಸಗಟು ವ್ಯಾಪಾರಿ",
+    "retailer": "ಚಿಲ್ಲರೆ ವ್ಯಾಪಾರಿ",
+    "coldStorage": "ಶೀತಲ ಸಂಗ್ರಹ",
+    "transport": "ಸಾರಿಗೆ",
+    "exporter": "ರಫ್ತುದಾರ"
+  },
+  "auth": {
+    "welcomeBack": "ಮರಳಿ ಸ್ವಾಗತ! 🙏",
+    "loginPrompt": "ನಿಮ್ಮ Aarohan Agri ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಿ",
+    "mobileOtp": "ಮೊಬೈಲ್ OTP",
+    "email": "ಇಮೇಲ್",
+    "mobilePlaceholder": "10-ಅಂಕಿಯ ಸಂಖ್ಯೆ",
+    "sendOtp": "OTP ಕಳುಹಿಸಿ",
+    "sending": "ಕಳುಹಿಸುತ್ತಿದೆ...",
+    "enterOtp": "OTP ನಮೂದಿಸಿ",
+    "verifyLogin": "ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಲಾಗಿನ್ ಮಾಡಿ",
+    "verifying": "ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ...",
+    "password": "ಪಾಸ್ವರ್ಡ್",
+    "loginBtn": "ಲಾಗಿನ್",
+    "loggingIn": "ಲಾಗಿನ್ ಆಗುತ್ತಿದೆ...",
+    "voiceLogin": "🎤 ಧ್ವನಿಯೊಂದಿಗೆ ಲಾಗಿನ್ ಮಾಡಿ (Bol ke Login)",
+    "newHere": "ಹೊಸಬರೇ?",
+    "register": "ನೋಂದಣಿ ಮಾಡಿ",
+    "alreadyHaveAccount": "ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?",
+    "whoAreYou": "ನೀವು ಯಾರು?",
+    "registerFarmer": "ರೈತ ನೋಂದಣಿ",
+    "registerBuyer": "ಖರೀದಿದಾರರ ನೋಂದಣಿ",
+    "registerAgent": "ಏಜೆಂಟ್ ನೋಂದಣಿ",
+    "fullName": "ಪೂರ್ಣ ಹೆಸರು *",
+    "village": "ಗ್ರಾಮ / ನಗರ *",
+    "state": "ರಾಜ್ಯ *",
+    "crops": "ಬೆಳೆಗಳು (ಅಲ್ಪವಿರಾಮದಿಂದ ಬೇರ್ಪಡಿಸಿ)",
+    "company": "ಕಂಪನಿ / ಸಂಸ್ಥೆ",
+    "gst": "GST ಸಂಖ್ಯೆ",
+    "aadhaar": "ಆಧಾರ್ (ಕೊನೆಯ 4)",
+    "confirmPass": "ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ *",
+    "agreeTerms": "ನಾನು ನಿಯಮ ಮತ್ತು ಷರತ್ತುಗಳನ್ನು ಒಪ್ಪುತ್ತೇನೆ",
+    "submitReg": "ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ",
+    "success": "ಸ್ವಾಗತ!",
+    "redirecting": "ಲಾಗಿನ್ ಆಗುತ್ತಿದೆ..."
+  },
+  "nav": {
+    "home": "ಹೋಮ್",
+    "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+    "marketplace": "ಮಾರುಕಟ್ಟೆ",
+    "coldStorage": "ಶೀತಲ ಸಂಗ್ರಹ",
+    "transport": "ಸಾರಿಗೆ",
+    "labTesting": "ಲ್ಯಾಬ್ ಟೆಸ್ಟ್",
+    "aiInsights": "AI ಒಳನೋಟಗಳು",
+    "help": "ಸಹಾಯ",
+    "profile": "ಪ್ರೊಫೈಲ್",
+    "logout": "ಲಾಗ್ ಔಟ್"
+  },
+  "dashboard": {
+    "namaste": "ನಮಸ್ಕಾರ",
+    "certifiedFarmer": "ಪ್ರಮಾಣೀಕೃತ ರೈತ",
+    "profileComplete": "ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಂಡಿದೆ",
+    "sellMiddleman": "ಮಧ್ಯವರ್ತಿಗೆ ಮಾರಾಟ ಮಾಡಿ",
+    "sellDirect": "ನೇರವಾಗಿ ಸಗಟು ವ್ಯಾಪಾರಿಗೆ ಮಾರಾಟ ಮಾಡಿ",
+    "recommended": "ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ",
+    "profit": "ಲಾಭ",
+    "perQuintal": "ಪ್ರತಿ ಕ್ವಿಂಟಾಲ್‌ಗೆ",
+    "livePrices": "ಲೈವ್ ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು",
+    "priceAlert": "ಬೆಲೆ ₹",
+    "bestTimeSell": "ತಲುಪಿದೆ — ಮಾರಾಟ ಮಾಡಲು ಉತ್ತಮ ಸಮಯ!"
+  },
+  "actions": {
+    "listCrop": "ನನ್ನ ಬೆಳೆ ಪಟ್ಟಿ ಮಾಡಿ",
+    "findStorage": "ಶೀತಲ ಸಂಗ್ರಹವನ್ನು ಹುಡುಕಿ",
+    "bookTransport": "ಸಾರಿಗೆ ಕಾಯ್ದಿರಿಸಿ",
+    "bookLabTest": "ಲ್ಯಾಬ್ ಟೆಸ್ಟ್ ಕಾಯ್ದಿರಿಸಿ",
+    "helpline": "ಹೆಲ್ಪ್‌ಲೈನ್"
+  }
+}

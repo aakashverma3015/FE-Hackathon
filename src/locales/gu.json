@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "તમારો પાક, તમારી કિંમત",
+    "description": "સીધા બજાર સુધી — વચેટિયાઓ વિના, સીધો નફો",
+    "stats": {
+      "farmers": "ખેડૂતો",
+      "saved": "બચાવેલ",
+      "buyers": "પ્રમાણિત ખરીદદારો",
+      "states": "સક્રિય રાજ્યો"
+    }
+  },
+  "trust": {
+    "apmc": "APMC પ્રમાણિત",
+    "iso": "ISO પ્રમાણિત",
+    "secure": "સુરક્ષિત ડેટા",
+    "ai": "AI-સંચાલિત",
+    "madeInIndia": "મેડ ઇન ઇન્ડિયા"
+  },
+  "roles": {
+    "farmer": "ખેડૂત",
+    "buyer": "ખરીદદાર",
+    "middleman": "એજન્ટ / દલાલ",
+    "wholesaler": "જથ્થાબંધ વેપારી",
+    "retailer": "છૂટક વેપારી",
+    "coldStorage": "કોલ્ડ સ્ટોરેજ",
+    "transport": "પરિવહન",
+    "exporter": "નિકાસકાર"
+  },
+  "auth": {
+    "welcomeBack": "ફરી સ્વાગત છે! 🙏",
+    "loginPrompt": "તમારા Aarohan Agri ખાતામાં લૉગિન કરો",
+    "mobileOtp": "મોબાઇલ OTP",
+    "email": "ઇમેઇલ",
+    "mobilePlaceholder": "10-આંકડાનો નંબર",
+    "sendOtp": "OTP મોકલો",
+    "sending": "મોકલી રહ્યું છે...",
+    "enterOtp": "OTP દાખલ કરો",
+    "verifyLogin": "ચકાસો અને લૉગિન કરો",
+    "verifying": "ચકાસી રહ્યું છે...",
+    "password": "પાસવર્ડ",
+    "loginBtn": "લૉગિન",
+    "loggingIn": "લૉગિન થઈ રહ્યું છે...",
+    "voiceLogin": "🎤 બોલીને લૉગિન કરો",
+    "newHere": "નવા છો?",
+    "register": "નોંધણી કરો (Register)",
+    "alreadyHaveAccount": "શું પહેલેથી જ ખાતું છે?",
+    "whoAreYou": "તમે કોણ છો?",
+    "registerFarmer": "ખેડૂત નોંધણી",
+    "registerBuyer": "ખરીદદાર નોંધણી",
+    "registerAgent": "એજન્ટ નોંધણી",
+    "fullName": "પૂરું નામ *",
+    "village": "ગામ / શહેર *",
+    "state": "રાજ્ય *",
+    "crops": "પાક (અલ્પવિરામથી અલગ કરો)",
+    "company": "કંપની / ફર્મ",
+    "gst": "GST નંબર",
+    "aadhaar": "આધાર (છેલ્લા 4 અંક)",
+    "confirmPass": "પાસવર્ડની પુષ્ટિ કરો *",
+    "agreeTerms": "હું નિયમો અને શરતો સાથે સંમત છું",
+    "submitReg": "નોંધણી સફળ",
+    "success": "સ્વાગત છે!",
+    "redirecting": "લૉગિન થઈ રહ્યું છે..."
+  },
+  "nav": {
+    "home": "હોમ",
+    "dashboard": "ડેશબોર્ડ",
+    "marketplace": "માર્કેટપ્લેસ",
+    "coldStorage": "કોલ્ડ સ્ટોરેજ",
+    "transport": "પરિવહન",
+    "labTesting": "લેબ ટેસ્ટિંગ",
+    "aiInsights": "AI ઇનસાઇટ્સ",
+    "help": "મદદ",
+    "profile": "પ્રોફાઇલ",
+    "logout": "લૉગ આઉટ"
+  },
+  "dashboard": {
+    "namaste": "નમસ્તે",
+    "certifiedFarmer": "પ્રમાણિત ખેડૂત",
+    "profileComplete": "પ્રોફાઇલ પૂર્ણ",
+    "sellMiddleman": "વચેટિયાને વેચો",
+    "sellDirect": "સીધા જથ્થાબંધ વેપારીને વેચો",
+    "recommended": "ભલામણ કરેલ",
+    "profit": "નફો",
+    "perQuintal": "પ્રતિ ક્વિન્ટલ",
+    "livePrices": "લાઇવ બજાર ભાવ",
+    "priceAlert": "નો ભાવ ₹",
+    "bestTimeSell": "પર પહોંચ્યો — વેચવાનો શ્રેષ્ઠ સમય!"
+  },
+  "actions": {
+    "listCrop": "મારો પાક સૂચિબદ્ધ કરો",
+    "findStorage": "કોલ્ડ સ્ટોરેજ શોધો",
+    "bookTransport": "પરિવહન બુક કરો",
+    "bookLabTest": "લેબ ટેસ્ટ બુક કરો",
+    "helpline": "હેલ્પલાઇન"
+  }
+}

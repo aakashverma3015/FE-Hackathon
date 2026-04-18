@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "ਤੁਹਾਡੀ ਫਸਲ, ਤੁਹਾਡਾ ਮੁੱਲ",
+    "description": "ਸਿੱਧਾ ਬਾਜ਼ਾਰ ਤੱਕ — ਵਿਚੋਲਿਆਂ ਤੋਂ ਬਿਨਾਂ, ਸਿੱਧਾ ਮੁਨਾਫਾ",
+    "stats": {
+      "farmers": "ਕਿਸਾਨ",
+      "saved": "ਬਚਾਏ ਗਏ",
+      "buyers": "ਤਸਦੀਕਸ਼ੁਦਾ ਖਰੀਦਦਾਰ",
+      "states": "ਸਰਗਰਮ ਰਾਜ"
+    }
+  },
+  "trust": {
+    "apmc": "APMC ਤਸਦੀਕਸ਼ੁਦਾ",
+    "iso": "ISO ਪ੍ਰਮਾਣਿਤ",
+    "secure": "ਸੁਰੱਖਿਅਤ ਡੇਟਾ",
+    "ai": "AI-ਸੰਚਾਲਿਤ",
+    "madeInIndia": "ਮੇਡ ਇਨ ਇੰਡੀਆ"
+  },
+  "roles": {
+    "farmer": "ਕਿਸਾਨ",
+    "buyer": "ਖਰੀਦਦਾਰ",
+    "middleman": "ਏਜੰਟ / ਵਿਚੋਲਾ",
+    "wholesaler": "ਥੋਕ ਵਪਾਰੀ",
+    "retailer": "ਪ੍ਰਚੂਨ ਵਪਾਰੀ",
+    "coldStorage": "ਕੋਲਡ ਸਟੋਰੇਜ",
+    "transport": "ਟਰਾਂਸਪੋਰਟ",
+    "exporter": "ਨਿਰਯਾਤਕ"
+  },
+  "auth": {
+    "welcomeBack": "ਜੀ ਆਇਆਂ ਨੂੰ! 🙏",
+    "loginPrompt": "ਆਪਣੇ Aarohan Agri ਖਾਤੇ ਵਿੱਚ ਲੌਗਇਨ ਕਰੋ",
+    "mobileOtp": "ਮੋਬਾਈਲ OTP",
+    "email": "ਈਮੇਲ",
+    "mobilePlaceholder": "10-ਅੰਕਾਂ ਦਾ ਨੰਬਰ",
+    "sendOtp": "OTP ਭੇਜੋ",
+    "sending": "ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ...",
+    "enterOtp": "OTP ਦਰਜ ਕਰੋ",
+    "verifyLogin": "ਤਸਦੀਕ ਕਰੋ ਅਤੇ ਲੌਗਇਨ ਕਰੋ",
+    "verifying": "ਤਸਦੀਕ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+    "password": "ਪਾਸਵਰਡ",
+    "loginBtn": "ਲੌਗਇਨ",
+    "loggingIn": "ਲੌਗਇਨ ਹੋ ਰਿਹਾ ਹੈ...",
+    "voiceLogin": "🎤 ਬੋਲ ਕੇ ਲੌਗਇਨ ਕਰੋ",
+    "newHere": "ਨਵੇਂ ਹੋ?",
+    "register": "ਰਜਿਸਟਰ ਕਰੋ",
+    "alreadyHaveAccount": "ਕੀ ਪਹਿਲਾਂ ਹੀ ਖਾਤਾ ਹੈ?",
+    "whoAreYou": "ਤੁਸੀਂ ਕੌਣ ਹੋ?",
+    "registerFarmer": "ਕਿਸਾਨ ਰਜਿਸਟ੍ਰੇਸ਼ਨ",
+    "registerBuyer": "ਖਰੀਦਦਾਰ ਰਜਿਸਟ੍ਰੇਸ਼ਨ",
+    "registerAgent": "ਏਜੰਟ ਰਜਿਸਟ੍ਰੇਸ਼ਨ",
+    "fullName": "ਪੂਰਾ ਨਾਮ *",
+    "village": "ਪਿੰਡ / ਸ਼ਹਿਰ *",
+    "state": "ਰਾਜ *",
+    "crops": "ਫਸਲਾਂ (ਕਾਮੇ ਨਾਲ ਵੱਖ ਕਰੋ)",
+    "company": "ਕੰਪਨੀ / ਫਰਮ",
+    "gst": "GST ਨੰਬਰ",
+    "aadhaar": "ਆਧਾਰ (ਆਖਰੀ 4 ਅੰਕ)",
+    "confirmPass": "ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ *",
+    "agreeTerms": "ਮੈਂ ਨਿਯਮਾਂ ਅਤੇ ਸ਼ਰਤਾਂ ਨਾਲ ਸਹਿਮਤ ਹਾਂ",
+    "submitReg": "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਸਫਲ",
+    "success": "ਸੁਆਗਤ ਹੈ!",
+    "redirecting": "ਲੌਗਇਨ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
+  },
+  "nav": {
+    "home": "ਹੋਮ",
+    "dashboard": "ਡੈਸ਼ਬੋਰਡ",
+    "marketplace": "ਮਾਰਕੀਟਪਲੇਸ",
+    "coldStorage": "ਕੋਲਡ ਸਟੋਰੇਜ",
+    "transport": "ਟਰਾਂਸਪੋਰਟ",
+    "labTesting": "ਲੈਬ ਟੈਸਟਿੰਗ",
+    "aiInsights": "AI ਇਨਸਾਈਟਸ",
+    "help": "ਮਦਦ",
+    "profile": "ਪ੍ਰੋਫਾਈਲ",
+    "logout": "ਲੌਗ ਆਉਟ"
+  },
+  "dashboard": {
+    "namaste": "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ",
+    "certifiedFarmer": "ਪ੍ਰਮਾਣਿਤ ਕਿਸਾਨ",
+    "profileComplete": "ਪ੍ਰੋਫਾਈਲ ਪੂਰਾ",
+    "sellMiddleman": "ਵਿਚੋਲੇ ਨੂੰ ਵੇਚੋ",
+    "sellDirect": "ਸਿੱਧਾ ਥੋਕ ਵਪਾਰੀ ਨੂੰ ਵੇਚੋ",
+    "recommended": "ਸੁਝਾਇਆ ਗਿਆ",
+    "profit": "ਮੁਨਾਫਾ",
+    "perQuintal": "ਪ੍ਰਤੀ ਕੁਇੰਟਲ",
+    "livePrices": "ਲਾਈਵ ਮੰਡੀ ਭਾਅ",
+    "priceAlert": "ਦਾ ਭਾਅ ₹",
+    "bestTimeSell": "ਤੇ ਪਹੁੰਚਿਆ — ਵੇਚਣ ਦਾ ਸਹੀ ਸਮਾਂ!"
+  },
+  "actions": {
+    "listCrop": "ਮੇਰੀ ਫਸਲ ਦੀ ਸੂਚੀ ਬਣਾਓ",
+    "findStorage": "ਕੋਲਡ ਸਟੋਰੇਜ ਲੱਭੋ",
+    "bookTransport": "ਟਰਾਂਸਪੋਰਟ ਬੁੱਕ ਕਰੋ",
+    "bookLabTest": "ਲੈਬ ਟੈਸਟ ਬੁੱਕ ਕਰੋ",
+    "helpline": "ਹੈਲਪਲਾਈਨ"
+  }
+}

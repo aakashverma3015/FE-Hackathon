@@ -1,0 +1,97 @@
+{
+  "app": {
+    "name": "Aarohan Agri",
+    "tagline": "तुमचे पीक, तुमची किंमत",
+    "description": "सीधा बाजारापर्यंत — मध्यस्थांशिवाय, थेट नफा",
+    "stats": {
+      "farmers": "शेतकरी",
+      "saved": "वाचवले",
+      "buyers": "सत्यापित खरेदीदार",
+      "states": "सक्रिय राज्ये"
+    }
+  },
+  "trust": {
+    "apmc": "APMC सत्यापित",
+    "iso": "ISO प्रमाणित",
+    "secure": "डेटा सुरक्षित",
+    "ai": "AI-सक्षम",
+    "madeInIndia": "मेड इन इंडिया"
+  },
+  "roles": {
+    "farmer": "शेतकरी",
+    "buyer": "खरेदीदार",
+    "middleman": "एजंट / दलाल",
+    "wholesaler": "घाऊक व्यापारी",
+    "retailer": "किरकोळ व्यापारी",
+    "coldStorage": "शीतगृह",
+    "transport": "वाहतूक",
+    "exporter": "निर्यातदार"
+  },
+  "auth": {
+    "welcomeBack": "पुन्हा स्वागत आहे! 🙏",
+    "loginPrompt": "तुमच्या Aarohan Agri खात्यात लॉग इन करा",
+    "mobileOtp": "मोबाईल OTP",
+    "email": "ईमेल",
+    "mobilePlaceholder": "१० अंकी नंबर",
+    "sendOtp": "OTP पाठवा",
+    "sending": "पाठवत आहे...",
+    "enterOtp": "OTP प्रविष्ट करा",
+    "verifyLogin": "सत्यापित करा आणि लॉग इन करा",
+    "verifying": "सत्यापित करत आहे...",
+    "password": "पासवर्ड",
+    "loginBtn": "लॉग इन",
+    "loggingIn": "लॉगिन करत आहे...",
+    "voiceLogin": "🎤 आवाजाने लॉग इन करा (बोल के लॉगिन करो)",
+    "newHere": "नवीन आहात?",
+    "register": "नोंदणी रजिस्टर करा",
+    "alreadyHaveAccount": "आधीपासूनच खाते आहे?",
+    "whoAreYou": "तुम्ही कोण आहात?",
+    "registerFarmer": "शेतकरी नोंदणी",
+    "registerBuyer": "खरेदीदार नोंदणी",
+    "registerAgent": "एजंट नोंदणी",
+    "fullName": "पूर्ण नाव *",
+    "village": "गाव / शहर *",
+    "state": "राज्य *",
+    "crops": "पिके (स्वल्पविरामाने वेगळे करा)",
+    "company": "कंपनी / फर्म",
+    "gst": "GST नंबर",
+    "aadhaar": "आधार (शेवटचे ४ क्रमांक)",
+    "confirmPass": "पासवर्डची पुष्टी करा *",
+    "agreeTerms": "मी अटी व शर्ती आणि गोपनीयता धोरणाशी सहमत आहे",
+    "submitReg": "नोंदणी यशस्वी",
+    "success": "स्वागत आहे!",
+    "redirecting": "लॉगिन करत आहे..."
+  },
+  "nav": {
+    "home": "मुख्यपृष्ठ",
+    "dashboard": "डॅशबोर्ड",
+    "marketplace": "बाजार",
+    "coldStorage": "शीतगृह",
+    "transport": "वाहतूक",
+    "labTesting": "प्रयोगशाळा चाचणी",
+    "aiInsights": "AI अंतर्दृष्टी",
+    "help": "मदत आणि समर्थन",
+    "profile": "प्रोफाइल",
+    "logout": "बाहेर पडा"
+  },
+  "dashboard": {
+    "namaste": "नमस्कार",
+    "certifiedFarmer": "प्रमाणित शेतकरी",
+    "profileComplete": "प्रोफाइल पूर्ण",
+    "sellMiddleman": "मध्यस्थाला विका",
+    "sellDirect": "थेट घाऊक व्यापाऱ्याला विका",
+    "recommended": "शिफारस केलेले",
+    "profit": "नफा",
+    "perQuintal": "प्रति क्विंटल",
+    "livePrices": "थेट बाजार भाव",
+    "priceAlert": "चा भाव ₹",
+    "bestTimeSell": "पोचला — विकण्याची सर्वोत्तम वेळ!"
+  },
+  "actions": {
+    "listCrop": "माझे पीक सूचीबद्ध करा",
+    "findStorage": "शीतगृह शोधा",
+    "bookTransport": "वाहतूक बुक करा",
+    "bookLabTest": "प्रयोगशाळा चाचणी बुक करा",
+    "helpline": "हेल्पलाइन"
+  }
+}
