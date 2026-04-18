@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import toast from 'react-hot-toast';
-import { Phone, Navigation, Truck, MapPin } from 'lucide-react';
+import { Phone, Navigation, Truck, MapPin, Zap, CheckCircle, Info, Star, Search, Layout } from 'lucide-react';
 
 // ── Predefined MP route coordinates ────────────────────────────
 const ROUTES = {
@@ -126,220 +126,292 @@ export default function Transport() {
   const currentRoute = activeRoute || ROUTES['Indore → Bhopal'];
 
   return (
-    <div style={{ background: 'var(--surface-bg)', minHeight: '100vh', paddingBottom: 32 }}>
+    <div style={{ background: 'var(--bg-page)', minHeight: '100vh', paddingBottom: 60, color: 'var(--text-primary)', fontFamily: 'Inter, sans-serif' }}>
       <div className="container" style={{ paddingTop: 24 }}>
-        <div className="breadcrumb" style={{ marginBottom: 16 }}>
-          <span className="breadcrumb-item">🏠 Home</span>
-          <span className="breadcrumb-sep">/</span>
-          <span className="breadcrumb-item active">🚛 Transport Booking</span>
+        
+        {/* ── BREADCRUMB ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-muted)' }}>
+          <span style={{ cursor: 'pointer', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-600)'} onMouseLeave={e => e.currentTarget.style.color = 'inherit'}>Home</span>
+          <span style={{ color: 'var(--border-strong)' }}>/</span>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Transport Booking</span>
         </div>
 
-        <h1 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', color: '#1B5E20', marginBottom: 4 }}>
-          🚛 Transport Booking
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 20 }}>
-          Compare Porter, Loadshare &amp; Vahak — real-time route visualization
-        </p>
-
-        {/* ── Main Map (always visible) ── */}
-        <div style={{ borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.12)', marginBottom: 24, border: '2px solid #C8E6C9' }}>
-          <div style={{ background: '#1B5E20', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <MapPin size={16} color="white" />
-            <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '0.9rem', color: 'white' }}>
-              {calculated ? `Route: ${routeKey || 'Indore → Bhopal'} · ${currentRoute.km} km · ${currentRoute.time}` : 'MP Mandi Network Map'}
-            </span>
-            {bookStep === 3 && (
-              <span style={{ marginLeft: 'auto', fontSize: '0.72rem', color: '#FFD54F', display: 'flex', alignItems: 'center', gap: 4 }}>
-                <div className="live-dot" style={{ background: '#FFD54F' }} /> LIVE TRACKING
-              </span>
-            )}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+          <div>
+            <h1 style={{ fontWeight: 800, fontSize: '1.75rem', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: 4 }}>
+              Agri Logistics Network
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Compare and book certified logistics providers for Mandi transport.</p>
           </div>
-          <MapContainer
-            center={[22.9734, 76.5000]}
-            zoom={7}
-            style={{ height: 360, width: '100%' }}
-            scrollWheelZoom={false}
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="© OSM" />
-
-            {/* Show route when calculated */}
-            {calculated && activeRoute && (
-              <>
-                <FitBounds positions={activeRoute.waypoints} />
-                <Polyline positions={activeRoute.waypoints} pathOptions={{ color: '#1B5E20', weight: 5, dashArray: '10 6' }} />
-                <Marker position={activeRoute.from} icon={greenIcon}>
-                  <Popup><strong>📍 Pickup:</strong> {pickup}</Popup>
-                </Marker>
-                <Marker position={activeRoute.to} icon={redIcon}>
-                  <Popup><strong>🎯 Delivery:</strong> {delivery}</Popup>
-                </Marker>
-              </>
-            )}
-
-            {/* Show mandi network when not calculated */}
-            {!calculated && MANDI_LOCATIONS.map(m => (
-              <Marker key={m.name} position={[m.lat, m.lng]} icon={m.type === 'source' ? greenIcon : redIcon}>
-                <Popup><strong>{m.name}</strong><br />{m.type === 'source' ? '📦 Major Source Mandi' : '🏪 Destination Mandi'}</Popup>
-              </Marker>
-            ))}
-
-            {/* Animated truck after booking */}
-            {bookStep === 3 && truckPos && (
-              <Marker position={truckPos} icon={truckIcon}>
-                <Popup><strong>🚛 MP09 AB 1234</strong><br />Driver: Ramesh Kumar<br />📞 9876543210</Popup>
-              </Marker>
-            )}
-          </MapContainer>
-
-          {/* Quick routes */}
-          <div style={{ background: '#F8FAF7', padding: '10px 20px', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, alignSelf: 'center' }}>Quick routes:</span>
-            {Object.keys(ROUTES).map(r => (
-              <button key={r} onClick={() => { const parts = r.split(' → '); setPickup(parts[0]); setDelivery(parts[1]); setRouteKey(r); setCalculated(true); toast.success(`Route: ${ROUTES[r].km} km`); }}
-                style={{ fontSize: '0.72rem', padding: '4px 10px', borderRadius: 100, border: '1px solid #C8E6C9', background: routeKey === r ? '#1B5E20' : 'white', color: routeKey === r ? 'white' : '#1B5E20', cursor: 'pointer', fontWeight: 600 }}>
-                {r}
-              </button>
-            ))}
-          </div>
+          {bookStep === 3 && (
+            <div style={{ 
+              background: '#FEF3C7', border: '1px solid #FDE68A', padding: '6px 12px', borderRadius: 8,
+              display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.75rem', fontWeight: 700, color: '#92400E'
+            }}>
+              <div style={{ width: 8, height: 8, borderRadius: 99, background: '#D97706' }} /> LIVE TRACKING ACTIVE
+            </div>
+          )}
         </div>
 
-        {/* Route Input */}
-        <div style={{ background: 'var(--card-bg)', borderRadius: 20, padding: 24, marginBottom: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 12, alignItems: 'end' }}>
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">📍 Pickup Location</label>
-              <input type="text" className="form-input" placeholder="e.g. Indore, Dewas"
-                value={pickup} onChange={e => setPickup(e.target.value)} list="pickup-list" />
-              <datalist id="pickup-list">
-                {['Indore', 'Ujjain', 'Dewas', 'Bhopal', 'Ratlam'].map(v => <option key={v} value={v} />)}
-              </datalist>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: 2 }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#E8F5E9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>➜</div>
-            </div>
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">🎯 Delivery Location</label>
-              <input type="text" className="form-input" placeholder="e.g. Bhopal, Ratlam"
-                value={delivery} onChange={e => setDelivery(e.target.value)} list="delivery-list" />
-              <datalist id="delivery-list">
-                {['Bhopal', 'Ratlam', 'Ujjain', 'Dewas', 'Jabalpur'].map(v => <option key={v} value={v} />)}
-              </datalist>
-            </div>
-          </div>
-          <button className="btn btn-primary btn-full btn-lg" style={{ marginTop: 16 }} onClick={handleCalculate}>
-            <Navigation size={18} /> Calculate Route &amp; Compare Prices
-          </button>
-        </div>
-
-        {/* Results */}
-        {calculated && (
-          <>
-            <div style={{ background: 'linear-gradient(135deg, #E8F5E9, #C8E6C9)', borderRadius: 14, padding: '14px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ fontSize: 32 }}>🤖</div>
-              <div>
-                <div style={{ fontWeight: 700, color: '#1B5E20', fontSize: '0.95rem' }}>AI Route Analysis</div>
-                <div style={{ fontSize: '0.85rem', color: '#2E7D32' }}>
-                  Distance: <strong>{currentRoute.km} km</strong> · ETA: <strong>{currentRoute.time}</strong> · Best time: <strong>6:00–8:00 AM</strong>
-                </div>
+        {/* ── ROUTE CALCULATION ACTION BAR ── */}
+        <div style={{ 
+          background: 'var(--bg-card)', borderRadius: 16, padding: '16px 20px', marginBottom: 24,
+          border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr) auto', gap: 16, alignItems: 'end' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label style={{ fontSize: '0.625rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Pickup Mandi</label>
+              <div style={{ position: 'relative' }}>
+                <MapPin size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--brand-600)' }} />
+                <input 
+                  type="text" style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px 0 34px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
+                  placeholder="Source" value={pickup} onChange={e => setPickup(e.target.value)} 
+                />
               </div>
             </div>
 
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: 14 }}>📊 Provider Comparison</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 24 }}>
+            <div style={{ height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+              <Truck size={18} />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label style={{ fontSize: '0.625rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Delivery Destination</label>
+              <div style={{ position: 'relative' }}>
+                <MapPin size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--accent-red)' }} />
+                <input 
+                  type="text" style={{ width: '100%', height: 40, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px 0 34px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
+                  placeholder="Destination" value={delivery} onChange={e => setDelivery(e.target.value)} 
+                />
+              </div>
+            </div>
+
+            <button 
+              onClick={handleCalculate}
+              className="btn btn-primary"
+              style={{ height: 40, padding: '0 24px', fontSize: '0.8125rem', fontWeight: 700 }}
+            >
+              Verify Route
+            </button>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)', gap: 32, alignItems: 'start' }}>
+          
+          {/* ── LEFT: PROVIDERS & AI INSIGHTS ── */}
+          <div>
+            {calculated && (
+              <div style={{
+                background: 'var(--brand-50)', border: '1px solid var(--brand-200)', borderRadius: 16,
+                padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20,
+                position: 'relative', overflow: 'hidden'
+              }}>
+                <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, background: 'var(--brand-500)' }} />
+                <div style={{ 
+                  width: 48, height: 48, borderRadius: 12, background: 'white',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}>
+                  <Zap size={24} color="var(--brand-600)" />
+                </div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                    <span style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--brand-900)' }}>Logistics Intelligence</span>
+                    <span style={{ background: 'var(--brand-600)', color: 'white', padding: '1px 8px', borderRadius: 999, fontSize: '0.625rem', fontWeight: 800 }}>OPTIMIZED</span>
+                  </div>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--brand-700)', lineHeight: 1.5 }}>
+                    Route: <strong>{currentRoute.km} km</strong> via Indore bypass. ETA: <strong>{currentRoute.time}</strong>.
+                    Recommended pickup window: <strong>7:00 AM – 9:00 AM</strong> for minimum congestion.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {(transportProviders?.length ? transportProviders : [
-                { id: 1, name: 'Porter', vehicle: 'Mini Truck', rating: 4.6, time: currentRoute.time, price: Math.round(currentRoute.km * 12), best: true },
-                { id: 2, name: 'Loadshare', vehicle: 'Tempo', rating: 4.4, time: currentRoute.time, price: Math.round(currentRoute.km * 10), best: false },
-                { id: 3, name: 'Vahak', vehicle: 'Large Truck', rating: 4.2, time: currentRoute.time, price: Math.round(currentRoute.km * 9), best: false },
-              ]).map(p => {
+                { id: 1, name: 'Porter', vehicle: 'Tata Ace (Chota Haathi)', rating: 4.8, type: 'Verified', price: Math.round(currentRoute.km * 12.5), best: true },
+                { id: 2, name: 'Loadshare', vehicle: 'Bolero Pickup', rating: 4.5, type: 'Fastest', price: Math.round(currentRoute.km * 11), best: false },
+                { id: 3, name: 'Vahak', vehicle: 'Eicher 14ft', rating: 4.3, type: 'Standard', price: Math.round(currentRoute.km * 9.8), best: false },
+              ]).map((p, idx) => {
                 const finalPrice = p.price || Math.round((p.basePrice || 500) + (p.pricePerKm || 15) * currentRoute.km);
                 return (
-                <div key={p.id} style={{ background: 'var(--card-bg)', borderRadius: 18, padding: 20, border: `2px solid ${p.best ? '#1B5E20' : '#f0f0f0'}`, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', position: 'relative' }}>
-                  {p.best && <div style={{ position: 'absolute', top: -10, left: 20 }}><span style={{ background: '#1B5E20', color: 'white', padding: '2px 12px', borderRadius: 100, fontSize: '0.7rem', fontWeight: 700 }}>⭐ Best Option</span></div>}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <div style={{ width: 52, height: 52, borderRadius: 14, background: p.best ? '#E8F5E9' : '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>
-                      {p.name === 'Porter' ? '🟢' : p.name === 'Loadshare' ? '🔵' : '🟠'}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: '#1B5E20' }}>{p.name}</span>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>⭐ {p.rating}</span>
+                  <div key={p.id} style={{
+                    background: 'var(--bg-card)', borderRadius: 16, overflow: 'hidden',
+                    border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)',
+                    transition: 'all 0.2s', position: 'relative'
+                  }}>
+                    {idx === 0 && (
+                      <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--brand-600)', color: 'white', padding: '2px 12px', borderRadius: '0 0 0 12px', fontSize: '0.625rem', fontWeight: 800 }}>
+                        RECOMMENDED
                       </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                        <span><Truck size={13} style={{ display: 'inline', marginRight: 4 }} />{p.vehicle}</span>
-                        <span>⏱️ {p.time || currentRoute.time}</span>
-                        <span>📍 {currentRoute.km} km</span>
+                    )}
+                    <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                      {/* Visual Signature Section */}
+                      <div style={{ 
+                        width: 100, background: 'var(--bg-page)', position: 'relative',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                        borderRight: '1px solid var(--border-light)', gap: 8
+                      }}>
+                        <div style={{ 
+                          width: 56, height: 56, borderRadius: 16, background: 'white',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: 28, boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
+                        }}>
+                          {p.name === 'Porter' ? '🚚' : p.name === 'Loadshare' ? '🚛' : '🚛'}
+                        </div>
+                        <span style={{ 
+                          fontSize: '0.625rem', fontWeight: 800, color: 'var(--text-muted)',
+                          textTransform: 'uppercase', letterSpacing: '0.05em'
+                        }}>{p.type || 'Provider'}</span>
                       </div>
-                    </div>
-                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.4rem', color: p.best ? '#1B5E20' : '#374151' }}>₹{finalPrice.toLocaleString()}</div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Total cost</div>
-                      <button className={`btn btn-sm ${p.best ? 'btn-primary' : 'btn-outline'}`} style={{ marginTop: 8 }} onClick={() => handleBook({ ...p, price: finalPrice })}>Book Now</button>
+
+                      {/* Main Info */}
+                      <div style={{ flex: 1, padding: 20 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                              <h3 style={{ fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>{p.name}</h3>
+                              <span style={{ background: '#ECFDF5', color: '#059669', padding: '1px 8px', borderRadius: 999, fontSize: '0.625rem', fontWeight: 700 }}>VERIFIED</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Truck size={14} /> {p.vehicle}</span>
+                              <span style={{ color: 'var(--border-strong)' }}>|</span>
+                              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Star size={14} fill="#F59E0B" color="#F59E0B" /> {p.rating}</span>
+                            </div>
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontWeight: 900, fontSize: '1.25rem', color: 'var(--brand-700)', letterSpacing: '-0.02em' }}>
+                              ₹{finalPrice.toLocaleString()}
+                            </div>
+                            <div style={{ fontSize: '0.625rem', color: 'var(--text-muted)', fontWeight: 600 }}>Total Fixed Fare</div>
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: 12 }}>
+                          <button 
+                            onClick={() => handleBook({ ...p, price: finalPrice })}
+                            style={{ 
+                              flex: 1.5, background: 'var(--brand-600)', color: 'white', height: 40, borderRadius: 8,
+                              fontSize: '0.8125rem', fontWeight: 600, border: 'none', cursor: 'pointer'
+                            }}
+                          >
+                            Book Vehicle Now
+                          </button>
+                          <button 
+                            style={{ 
+                              flex: 1, background: 'white', color: 'var(--text-primary)', height: 40, borderRadius: 8,
+                              fontSize: '0.8125rem', fontWeight: 600, border: '1px solid var(--border)', cursor: 'pointer',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
+                            }}
+                          >
+                            <Phone size={14} /> Call Driver
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* ── RIGHT: INTERACTIVE ROUTE MAP ── */}
+          <div style={{ position: 'sticky', top: 24 }}>
+            <div style={{ background: 'var(--bg-card)', borderRadius: 16, overflow: 'hidden', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+              <div style={{ background: 'var(--brand-600)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'white' }}>
+                  <Navigation size={16} />
+                  <span style={{ fontWeight: 700, fontSize: '0.875rem' }}>Full Route Trajectory</span>
                 </div>
-              )})}
-            </div>
-
-            <div style={{ background: '#FFEBEE', border: '2px solid #F44336', borderRadius: 14, padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Phone size={22} color="#C62828" />
-              <div>
-                <div style={{ fontWeight: 700, color: '#C62828', fontSize: '0.9rem' }}>Transport Emergency?</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>If your transport partner cancels last minute, call our emergency team</div>
+                {calculated && <span style={{ fontSize: '0.625rem', color: 'white', fontWeight: 700 }}>{currentRoute.km} KM</span>}
               </div>
-              <button className="btn btn-sm" style={{ marginLeft: 'auto', background: '#F44336', color: 'white', flexShrink: 0 }} onClick={() => toast.success('Calling 1800-XXX-XXXX...')}>📞 Emergency</button>
+              <MapContainer center={[22.9734, 76.5000]} zoom={7} style={{ height: 450, width: '100%' }} scrollWheelZoom={false}>
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="© OSM" />
+                {calculated && activeRoute && (
+                  <>
+                    <FitBounds positions={activeRoute.waypoints} />
+                    <Polyline positions={activeRoute.waypoints} pathOptions={{ color: 'var(--brand-600)', weight: 5, dashArray: '10 6' }} />
+                    <Marker position={activeRoute.from} icon={greenIcon}><Popup><strong>Mandi Source</strong></Popup></Marker>
+                    <Marker position={activeRoute.to} icon={redIcon}><Popup><strong>Mandi Destination</strong></Popup></Marker>
+                  </>
+                )}
+                {!calculated && MANDI_LOCATIONS.map(m => (
+                  <Marker key={m.name} position={[m.lat, m.lng]} icon={m.type === 'source' ? greenIcon : redIcon}>
+                    <Popup><strong>{m.name}</strong></Popup>
+                  </Marker>
+                ))}
+                {bookStep === 3 && truckPos && (
+                  <Marker position={truckPos} icon={truckIcon}>
+                    <Popup><strong>Live Truck Position</strong><br />MP09 AB 1234</Popup>
+                  </Marker>
+                )}
+              </MapContainer>
+              <div style={{ padding: '16px', background: 'var(--bg-page)' }}>
+                <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                    <div style={{ width: 12, height: 12, borderRadius: 2, background: 'var(--brand-600)' }} /> Source
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                    <div style={{ width: 12, height: 12, borderRadius: 2, background: '#DC2626' }} /> Destination
+                  </div>
+                </div>
+              </div>
             </div>
-          </>
-        )}
+          </div>
+        </div>
 
-        {/* OTP Modal */}
+        {/* ── MODALS ── */}
         {bookStep === 1 && selected && (
           <div className="modal-overlay">
-            <div className="modal-box">
-              <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1B5E20', marginBottom: 4, textAlign: 'center' }}>Confirm Booking — {selected.name}</h3>
-              <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 24 }}>Enter the OTP sent to your mobile</p>
+            <div className="modal-box" style={{ maxWidth: 400 }}>
+              <h3 style={{ fontWeight: 800, color: 'var(--text-primary)', marginBottom: 4 }}>Secure Booking</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem', marginBottom: 24 }}>Enter the verification code sent to your mobile.</p>
+              
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
                 {[0, 1, 2, 3].map(i => (
-                  <input key={i} type="text" maxLength={1}
-                    style={{ width: 52, height: 58, textAlign: 'center', fontSize: '1.3rem', fontWeight: 700, border: '2px solid #e2e8f0', borderRadius: 12, outline: 'none' }}
-                    onFocus={e => e.target.style.borderColor = '#1B5E20'}
-                    onBlur={e => e.target.style.borderColor = '#e2e8f0'}
-                    onChange={e => { const val = otp.split(''); val[i] = e.target.value; setOtp(val.join('')); if (e.target.value && e.target.nextSibling) e.target.nextSibling.focus(); }}
+                  <input 
+                    key={i} type="text" maxLength={1}
+                    style={{ 
+                      width: 52, height: 60, textAlign: 'center', fontSize: '1.5rem', fontWeight: 800, 
+                      border: '1px solid var(--border)', borderRadius: 12, background: 'var(--bg-page)', outline: 'none' 
+                    }}
+                    onChange={e => { if (e.target.value && i < 3) e.target.parentElement.children[i+1].focus(); setOtp(prev => { const arr = prev.split(''); arr[i] = e.target.value; return arr.join(''); }); }}
                   />
                 ))}
               </div>
-              <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 20 }}>Demo OTP: <strong>4729</strong></div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button className="btn btn-outline btn-full" onClick={() => setBookStep(0)}>Cancel</button>
-                <button className="btn btn-primary btn-full" onClick={handleVerifyOtp}>Verify &amp; Book</button>
+              <div style={{ textAlign: 'center', fontSize: '0.625rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 24 }}>Demo Pin: 4729</div>
+
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button className="btn btn-secondary btn-full" style={{ height: 44 }} onClick={() => setBookStep(0)}>Cancel</button>
+                <button 
+                  className="btn btn-primary btn-full" 
+                  style={{ height: 44 }}
+                  onClick={handleVerifyOtp}
+                >
+                  Verify & Book
+                </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Live Tracking Modal after confirm */}
         {bookStep === 3 && selected && (
           <div className="modal-overlay">
-            <div className="modal-box" onClick={e => e.stopPropagation()}>
-              <div style={{ textAlign: 'center', marginBottom: 12 }}>
-                <div style={{ fontSize: 56, marginBottom: 8 }}>🚛</div>
-                <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1B5E20', marginBottom: 4 }}>Booking Confirmed!</h3>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Your truck is on the way — live position updating on map</p>
+            <div className="modal-box" style={{ textAlign: 'center', maxWidth: 400 }}>
+              <div style={{ width: 64, height: 64, borderRadius: 99, background: '#ECFDF5', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CheckCircle size={32} color="#10B981" />
               </div>
-              <div style={{ background: '#E8F5E9', borderRadius: 12, padding: 14, marginBottom: 16 }}>
-                <div style={{ fontWeight: 700, color: '#1B5E20', marginBottom: 6, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <div className="live-dot" /> Live Tracking Active
-                </div>
-                {[['Vehicle', 'MP09 AB 1234'], ['Driver', 'Ramesh Kumar'], ['Contact', '📞 9876543210'], ['ETA', '2:30 PM today'], ['Route', routeKey || 'Indore → Bhopal']].map(([k, v]) => (
-                  <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: 4 }}>
+              <h3 style={{ fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>Booking Confirmed</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: 20, lineHeight: 1.5 }}>
+                Your transport with <strong>{selected.name}</strong> has been secured for the <strong>{routeKey}</strong> route.
+              </p>
+              <div style={{ background: 'var(--bg-page)', padding: 16, borderRadius: 12, textAlign: 'left', marginBottom: 20, border: '1px dashed var(--border)' }}>
+                {[['Vehicle No', 'MP09 AB 1234'], ['Driver', 'Kailash Singh'], ['ETA', 'Check Map Above']].map(([k, v]) => (
+                  <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', marginBottom: 4 }}>
                     <span style={{ color: 'var(--text-muted)' }}>{k}</span>
-                    <span style={{ fontWeight: 600, color: '#2E7D32' }}>{v}</span>
+                    <span style={{ fontWeight: 700 }}>{v}</span>
                   </div>
                 ))}
               </div>
-              <div style={{ background: '#F3F4F6', borderRadius: 12, padding: 12, marginBottom: 16, fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center' }}>
-                📍 Watch the orange marker move on the map above as your truck travels the route
-              </div>
-              <button className="btn btn-primary btn-full" onClick={() => { setBookStep(0); setSelected(null); setTruckPos(null); }}>Done</button>
+              <button className="btn btn-primary btn-full" style={{ height: 44 }} onClick={() => { setBookStep(0); setSelected(null); setTruckPos(null); }}>Track Journey</button>
             </div>
           </div>
         )}

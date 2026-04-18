@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-le
 import L from 'leaflet';
 import { useApp } from '../context/AppContext';
 import toast from 'react-hot-toast';
-import { MapPin, Navigation, Star } from 'lucide-react';
+import { MapPin, Navigation, Star, Search, Map, Layout, Zap, CheckCircle, Info } from 'lucide-react';
 
 // ── MP cold storage locations with full coordinates ──────────────
 const STORAGE_LOCATIONS = [
@@ -88,285 +88,306 @@ export default function ColdStorage() {
   const storagesToCompare = displayList.filter(s => compareList.includes(s.id));
 
   return (
-    <div style={{ background: 'var(--surface-bg)', minHeight: '100vh', paddingBottom: 32 }}>
+    <div style={{ background: 'var(--bg-page)', minHeight: '100vh', paddingBottom: 60, color: 'var(--text-primary)', fontFamily: 'Inter, sans-serif' }}>
       <div className="container" style={{ paddingTop: 24 }}>
-        <div className="breadcrumb" style={{ marginBottom: 16 }}>
-          <span className="breadcrumb-item">🏠 {t('nav.home') || 'Home'}</span>
-          <span className="breadcrumb-sep">/</span>
-          <span className="breadcrumb-item active">🧊 {t('nav.coldStorage') || 'Cold Storage Finder'}</span>
+        
+        {/* ── BREADCRUMB ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-muted)' }}>
+          <span style={{ cursor: 'pointer', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-600)'} onMouseLeave={e => e.currentTarget.style.color = 'inherit'}>Home</span>
+          <span style={{ color: 'var(--border-strong)' }}>/</span>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Cold Storage Finder</span>
         </div>
 
-        <h1 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', color: '#1B5E20', marginBottom: 4 }}>
-          🧊 Cold Storage Finder
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 20 }}>
-          Find verified cold storage partners near you — click any card to highlight on map
-        </p>
-
-        {/* ── ALWAYS-VISIBLE MAP ── */}
-        <div style={{ borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.12)', marginBottom: 24, border: '2px solid #C8E6C9' }}>
-          {/* Map header */}
-          <div style={{ background: '#1B5E20', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'white' }}>
-              <MapPin size={17} />
-              <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '0.9rem' }}>Live Storage Map — Madhya Pradesh</span>
-            </div>
-            {userPos && (
-              <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', gap: 5 }}>
-                <Navigation size={12} /> Using your location
-              </span>
-            )}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+          <div>
+            <h1 style={{ fontWeight: 800, fontSize: '1.75rem', color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: 4 }}>
+              Cold Storage Network
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Find and book certified storage facilities near your location.</p>
           </div>
+          <div style={{ display: 'flex', gap: 12 }}>
+            {compareList.length > 0 && (
+              <button 
+                onClick={() => setShowCompare(true)}
+                style={{ 
+                  background: 'var(--brand-50)', color: 'var(--brand-700)', border: '1px solid var(--brand-200)',
+                  padding: '8px 16px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: 8
+                }}
+              >
+                Compare ({compareList.length})
+              </button>
+            )}
+            <button 
+              className="btn btn-primary btn-sm"
+              style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+              onClick={() => toast.success('Scanning live availability...')}
+            >
+              <Navigation size={14} /> Detect Location
+            </button>
+          </div>
+        </div>
 
-          <MapContainer
-            center={userPos || [22.9734, 76.0520]}
-            zoom={userPos ? 11 : 8}
-            style={{ height: 380, width: '100%' }}
-            scrollWheelZoom={false}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+        {/* ── TOP ACTION BAR ── */}
+        <div style={{ 
+          background: 'var(--bg-card)', borderRadius: 16, padding: '12px 16px', marginBottom: 24,
+          border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 16,
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, padding: '0 8px' }}>
+            <Search size={18} color="var(--text-muted)" />
+            <input 
+              type="text" 
+              placeholder="Search by facility name, region or zip code..."
+              style={{ 
+                width: '100%', border: 'none', background: 'transparent', outline: 'none',
+                fontSize: '0.9375rem', color: 'var(--text-primary)' 
+              }}
+              value={search}
+              onChange={e => setSearch(e.target.value)}
             />
-            <FlyTo position={flyTarget} />
-
-            {/* User location */}
-            {userPos && (
-              <>
-                <Marker position={userPos} icon={userIcon}>
-                  <Popup><strong>📍 Your Location</strong></Popup>
-                </Marker>
-                <Circle center={userPos} radius={5000} pathOptions={{ color: '#6A1B9A', fillOpacity: 0.06 }} />
-              </>
-            )}
-
-            {/* Storage markers */}
-            {mapLocations.map(s => (
-              <Marker key={s.id} position={[s.lat, s.lng]} icon={colorIcon(getIconColor(s.price))}>
-                <Popup maxWidth={220}>
-                  <div style={{ fontFamily: 'Noto Sans', fontSize: 13, lineHeight: 1.6 }}>
-                    <strong style={{ color: '#1B5E20', display: 'block', marginBottom: 4 }}>🧊 {s.name}</strong>
-                    <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-                      <tbody>
-                        {[['Type', s.type], ['Price', `₹${s.price}/qtl/day`], ['Capacity', `${s.capacity} qtl`], ['Temp', s.temp], ['Rating', `⭐ ${s.rating}/5`], ['Phone', s.phone]].map(([k, v]) => (
-                          <tr key={k}>
-                            <td style={{ color: 'var(--text-muted)', paddingRight: 8, fontSize: 11 }}>{k}</td>
-                            <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{v}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    <button
-                      onClick={() => setBookModal(s)}
-                      style={{ marginTop: 8, width: '100%', background: '#1B5E20', color: 'white', border: 'none', borderRadius: 8, padding: '6px 0', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}
-                    >
-                      📅 Book This Storage
-                    </button>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-
-          {/* Legend */}
-          <div style={{ background: '#F8FAF7', padding: '10px 20px', display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-            {[['🟦', '< ₹1/day', 'Budget'], ['🟩', '₹1–1.5', 'Good Value'], ['🟧', '₹1.5–2', 'Premium'], ['🟥', '> ₹2', 'High End'], ['🟣', 'Your Location', '']].map(([dot, price, tag]) => (
-              <span key={price} style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                {dot} <strong>{price}</strong>{tag && ` (${tag})`}
-              </span>
+          </div>
+          <div style={{ width: 1, height: 24, background: 'var(--border)' }} />
+          <div style={{ display: 'flex', gap: 8 }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', alignSelf: 'center', marginRight: 8 }}>Filter:</span>
+            {['All', 'Private', 'Govt', 'Co-op'].map(t => (
+              <button key={t} style={{ height: 32, padding: '0 12px', borderRadius: 6, fontSize: '0.75rem', fontWeight: 600, border: '1px solid var(--border)', background: 'white', color: 'var(--text-muted)', cursor: 'pointer' }}>{t}</button>
             ))}
           </div>
         </div>
 
-        {/* Search */}
-        <div style={{ position: 'relative', marginBottom: 16 }}>
-          <span style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', fontSize: 18 }}>🔍</span>
-          <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Search by name or location... (e.g. Indore, Dewas)"
-            className="form-input" style={{ paddingLeft: 44 }} />
-        </div>
-
-        {/* Compare bar */}
-        {compareList.length > 0 && (
-          <div style={{ background: '#E8F5E9', border: '2px solid #4CAF50', borderRadius: 14, padding: '12px 16px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontWeight: 700, color: '#1B5E20', fontSize: '0.875rem' }}>📊 {compareList.length} selected</span>
-            <button className="btn btn-primary btn-sm" onClick={() => setShowCompare(true)}>Compare Now</button>
-            <button className="btn btn-ghost btn-sm" onClick={() => setCompareList([])}>Clear</button>
-          </div>
-        )}
-
-        {/* Storage cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: 16 }}>
-          {displayList.map((storage) => {
-            const loc = STORAGE_LOCATIONS.find(s => s.id === storage.id);
-            const isSelected = selectedStorage?.id === storage.id;
-            return (
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)', gap: 32, alignItems: 'start' }}>
+          
+          {/* ── LEFT: STORAGE GRID ── */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {displayList.map((storage) => (
               <div key={storage.id} style={{
-                background: 'var(--card-bg)', borderRadius: 18, padding: 20,
-                border: `2px solid ${isSelected ? '#1B5E20' : compareList.includes(storage.id) ? '#4CAF50' : '#f0f0f0'}`,
-                boxShadow: isSelected ? '0 4px 20px rgba(27,94,32,0.15)' : '0 2px 12px rgba(0,0,0,0.06)',
-                position: 'relative', transition: 'all 0.2s',
-                transform: isSelected ? 'translateY(-2px)' : 'none',
+                background: 'var(--bg-card)', borderRadius: 16, overflow: 'hidden',
+                border: storage.id === selectedStorage?.id ? '2px solid var(--brand-600)' : '1px solid var(--border)',
+                boxShadow: 'var(--shadow-sm)', transition: 'all 0.2s', position: 'relative'
               }}>
-                {/* Badges */}
-                <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
-                  {storage.bestValue && <span className="badge badge-gold">⭐ Best Value</span>}
-                  {storage.nearest && <span className="badge badge-blue">📍 Nearest</span>}
-                  {(storage.available === false) && <span className="badge badge-red">❌ Full</span>}
-                  <span className="badge" style={{ background: TYPE_COLORS[storage.type] + '20', color: TYPE_COLORS[storage.type] }}>
-                    {storage.type === 'Govt' ? '🏛️' : storage.type === 'Co-op' ? '🤝' : '🏢'} {storage.type}
-                  </span>
-                </div>
-
-                <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: '#1B5E20', marginBottom: 10 }}>
-                  🧊 {storage.name}
-                </h3>
-
-                {loc && (
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <MapPin size={11} /> {loc.address}
-                  </div>
-                )}
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 14 }}>
-                  {[
-                    ['Distance', `${storage.distance || loc ? '~' + Math.round(Math.random() * 20 + 3) : '?'} km`],
-                    ['Price/qtl/day', `₹${storage.pricePerDay || storage.price}`],
-                    ['Capacity', `${storage.capacity} qtl`],
-                    ['Rating', `⭐ ${storage.rating}`],
-                    ['Temperature', loc?.temp || 'N/A'],
-                    ['Phone', loc?.phone || 'N/A'],
-                  ].map(([label, value]) => (
-                    <div key={label} style={{ background: 'var(--surface-bg)', borderRadius: 8, padding: '7px 10px' }}>
-                      <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>{label}</div>
-                      <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.82rem' }}>{value}</div>
+                <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                  {/* Visual Signature Section */}
+                  <div style={{ 
+                    width: 100, background: 'var(--brand-50)', position: 'relative',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    borderRight: '1px solid var(--border-light)', gap: 8
+                  }}>
+                    <div style={{ 
+                      width: 56, height: 56, borderRadius: 16, background: 'white',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 28, boxShadow: '0 4px 12px rgba(0,0,0,0.06)'
+                    }}>
+                      {storage.type === 'Govt' ? '🏛️' : storage.type === 'Co-op' ? '🤝' : '🏭'}
                     </div>
-                  ))}
-                </div>
+                    <span style={{ 
+                      fontSize: '0.625rem', fontWeight: 800, color: 'var(--brand-700)',
+                      textTransform: 'uppercase', letterSpacing: '0.05em'
+                    }}>{storage.type}</span>
+                  </div>
 
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <button
-                    className={`btn btn-sm ${compareList.includes(storage.id) ? 'btn-outline' : 'btn-ghost'}`}
-                    style={{ flex: 1, fontSize: '0.75rem' }}
-                    onClick={() => toggleCompare(storage.id)}
-                  >
-                    {compareList.includes(storage.id) ? '✅ Selected' : '📊 Compare'}
-                  </button>
-                  {loc && (
-                    <button
-                      className="btn btn-ghost btn-sm"
-                      style={{ flex: 1, fontSize: '0.75rem', color: '#1565C0' }}
-                      onClick={() => handleShowOnMap(storage)}
-                    >
-                      🗺️ Show Map
-                    </button>
-                  )}
-                  <button
-                    className="btn btn-primary btn-sm"
-                    style={{ flex: 1, fontSize: '0.75rem' }}
-                    disabled={storage.available === false}
-                    onClick={() => storage.available !== false && setBookModal(storage)}
-                  >
-                    {storage.available === false ? '❌ Full' : '📅 Book'}
-                  </button>
+                  {/* Main Info */}
+                  <div style={{ flex: 1, padding: 20 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                          <h3 style={{ fontWeight: 700, fontSize: '1.125rem', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>{storage.name}</h3>
+                          <button 
+                            onClick={() => toggleCompare(storage.id)}
+                            style={{ 
+                              background: 'none', border: 'none', color: compareList.includes(storage.id) ? 'var(--brand-600)' : 'var(--text-muted)',
+                              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.6875rem', fontWeight: 600
+                            }}
+                          >
+                            {compareList.includes(storage.id) ? '✓ Compared' : '+ Compare'}
+                          </button>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={14} /> {storage.address}</span>
+                          <span style={{ color: 'var(--border-strong)' }}>|</span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Star size={14} fill="#F59E0B" color="#F59E0B" /> {storage.rating}</span>
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontWeight: 900, fontSize: '1.25rem', color: 'var(--brand-700)', letterSpacing: '-0.02em' }}>
+                          ₹{storage.price.toFixed(2)}
+                        </div>
+                        <div style={{ fontSize: '0.625rem', color: 'var(--text-muted)', fontWeight: 600 }}>per quintal / day</div>
+                      </div>
+                    </div>
+
+                    <div style={{ 
+                      display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, 
+                      background: 'var(--bg-page)', padding: '10px 14px', borderRadius: 12, marginBottom: 16
+                    }}>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.625rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 2 }}>Capacity</div>
+                        <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-primary)' }}>{storage.capacity.toLocaleString()} qtl</div>
+                      </div>
+                      <div style={{ textAlign: 'center', borderLeft: '1px solid var(--border)', borderRight: '1px solid var(--border)' }}>
+                        <div style={{ fontSize: '0.625rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 2 }}>Temp Range</div>
+                        <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--brand-600)' }}>{storage.temp}</div>
+                      </div>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.625rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 2 }}>Status</div>
+                        <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--success)' }}>Available</div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: 12 }}>
+                      <button 
+                        onClick={() => setBookModal(storage)}
+                        style={{ 
+                          flex: 1.5, background: 'var(--brand-600)', color: 'white', height: 40, borderRadius: 8,
+                          fontSize: '0.8125rem', fontWeight: 600, border: 'none', cursor: 'pointer'
+                        }}
+                      >
+                        Book Instantly
+                      </button>
+                      <button 
+                        onClick={() => handleShowOnMap(storage)}
+                        style={{ 
+                          flex: 1, background: 'white', color: 'var(--text-primary)', height: 40, borderRadius: 8,
+                          fontSize: '0.8125rem', fontWeight: 600, border: '1px solid var(--border)', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
+                        }}
+                      >
+                        <Map size={14} /> Locate
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
+
+          {/* ── RIGHT: INTERACTIVE MAP ── */}
+          <div style={{ position: 'sticky', top: 24 }}>
+            <div style={{ background: 'var(--bg-card)', borderRadius: 16, overflow: 'hidden', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+              <div style={{ background: 'var(--brand-600)', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'white' }}>
+                  <MapPin size={16} />
+                  <span style={{ fontWeight: 700, fontSize: '0.875rem' }}>Live Capacity Map</span>
+                </div>
+                {userPos && <span style={{ fontSize: '0.625rem', color: 'rgba(255,255,255,0.8)', fontWeight: 600 }}>Using your location</span>}
+              </div>
+              <MapContainer center={userPos || [22.7196, 75.8577]} zoom={userPos ? 12 : 10} style={{ height: 450, width: '100%' }} scrollWheelZoom={false}>
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OSM' />
+                <FlyTo position={flyTarget} />
+                {userPos && <Marker position={userPos} icon={userIcon}><Popup><strong>Your Location</strong></Popup></Marker>}
+                {mapLocations.map(s => (
+                  <Marker key={s.id} position={[s.lat, s.lng]} icon={colorIcon(getIconColor(s.price))}>
+                    <Popup maxWidth={220}>
+                      <div style={{ fontSize: 13, lineHeight: 1.5 }}>
+                        <strong style={{ color: 'var(--brand-700)' }}>{s.name}</strong><br />
+                        <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{s.address}</span><br />
+                        <div style={{ marginTop: 8, fontWeight: 700 }}>₹{s.price}/qtl/day</div>
+                        <button onClick={() => setBookModal(s)} style={{ marginTop: 8, width: '100%', background: 'var(--brand-600)', color: 'white', border: 'none', borderRadius: 4, padding: '4px 0', fontSize: 11, cursor: 'pointer' }}>Book Now</button>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
+              <div style={{ padding: '12px 16px', display: 'flex', gap: 12, flexWrap: 'wrap', background: 'var(--bg-page)' }}>
+                {[['🟦', '< ₹1.0'], ['🟩', '₹1–1.5'], ['🟧', '₹1.5–2'], ['🟥', '> ₹2']].map(([dot, label]) => (
+                  <span key={label} style={{ fontSize: '0.6875rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                    {dot} <span style={{ fontWeight: 600 }}>{label}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Compare Modal */}
+        {/* ── MODALS ── */}
         {showCompare && (
           <div className="modal-overlay" onClick={() => setShowCompare(false)}>
             <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: 700, width: '95%' }}>
-              <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1B5E20', marginBottom: 20 }}>📊 Storage Comparison</h3>
+              <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>Storage Comparison</h3>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
                   <thead>
-                    <tr style={{ background: '#E8F5E9' }}>
-                      <th style={{ padding: '12px', textAlign: 'left', color: '#1B5E20' }}>Feature</th>
-                      {storagesToCompare.map(s => <th key={s.id} style={{ padding: '12px', textAlign: 'center', color: '#1B5E20' }}>{s.name}</th>)}
+                    <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                      <th style={{ padding: '12px', textAlign: 'left', color: 'var(--text-muted)' }}>Feature</th>
+                      {storagesToCompare.map(s => <th key={s.id} style={{ padding: '12px', textAlign: 'center', color: 'var(--brand-700)' }}>{s.name}</th>)}
                     </tr>
                   </thead>
                   <tbody>
                     {[
-                      { label: '💰 Price/qtl/day', key: 'pricePerDay', alt: 'price', format: v => `₹${v}`, best: 'min' },
-                      { label: '📦 Capacity', key: 'capacity', format: v => `${v} qtl`, best: 'max' },
-                      { label: '⭐ Rating', key: 'rating', format: v => `${v}/5`, best: 'max' },
-                      { label: '🏢 Type', key: 'type', format: v => v },
+                      { label: 'Price (qtl/day)', key: 'price', format: v => `₹${v.toFixed(2)}`, best: 'min' },
+                      { label: 'Capacity', key: 'capacity', format: v => `${v.toLocaleString()} qtl` },
+                      { label: 'Rating', key: 'rating', format: v => `⭐ ${v}` },
+                      { label: 'Temperature', key: 'temp', format: v => v }
                     ].map((row, i) => (
-                      <tr key={row.label} style={{ background: i % 2 ? '#FAFAF7' : 'white' }}>
-                        <td style={{ padding: '10px 12px', fontWeight: 600, color: 'var(--text-primary)' }}>{row.label}</td>
+                      <tr key={row.label} style={{ background: i % 2 ? 'var(--bg-page)' : 'transparent' }}>
+                        <td style={{ padding: '12px', fontWeight: 600 }}>{row.label}</td>
                         {storagesToCompare.map(s => {
-                          const val = s[row.key] ?? s[row.alt];
-                          const nums = storagesToCompare.map(x => x[row.key] ?? x[row.alt]).filter(Number.isFinite);
-                          const isBest = row.best === 'min' ? val === Math.min(...nums) : row.best === 'max' ? val === Math.max(...nums) : false;
-                          return (
-                            <td key={s.id} style={{ padding: '10px 12px', textAlign: 'center', color: isBest ? '#1B5E20' : '#374151', fontWeight: isBest ? 700 : 400 }}>
-                              {row.format(val)} {isBest && '🏆'}
-                            </td>
-                          );
+                          const val = s[row.key];
+                          return <td key={s.id} style={{ padding: '12px', textAlign: 'center', fontWeight: 500 }}>{row.format(val)}</td>;
                         })}
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-                <button className="btn btn-outline btn-full" onClick={() => setShowCompare(false)}>Close</button>
-                <button className="btn btn-primary btn-full" onClick={() => { setShowCompare(false); setBookModal(storagesToCompare[0]); }}>
-                  Book Best Option
+              <button className="btn btn-secondary btn-full" style={{ marginTop: 24 }} onClick={() => setShowCompare(false)}>Close Selection</button>
+            </div>
+          </div>
+        )}
+
+        {bookModal && !confirmed && (
+          <div className="modal-overlay" onClick={() => setBookModal(null)}>
+            <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: 450 }}>
+              <h3 style={{ fontWeight: 800, color: 'var(--text-primary)', marginBottom: 4 }}>Review Booking</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem', marginBottom: 24 }}>Facility: {bookModal.name}</p>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <label style={{ fontSize: '0.625rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Quantity (qtl)</label>
+                  <input type="number" className="form-input" style={{ borderRadius: 8, height: 40 }} value={qty} onChange={e => setQty(+e.target.value)} min={1} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <label style={{ fontSize: '0.625rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Duration (Days)</label>
+                  <input type="number" className="form-input" style={{ borderRadius: 8, height: 40 }} value={duration} onChange={e => setDuration(+e.target.value)} min={1} />
+                </div>
+              </div>
+
+              <div style={{ background: 'var(--brand-50)', padding: 16, borderRadius: 12, marginBottom: 24, border: '1px solid var(--brand-100)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', marginBottom: 8, color: 'var(--brand-900)' }}>
+                  <span>Rate</span>
+                  <span>₹{bookModal.price.toFixed(2)}/qtl/day</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.125rem', color: 'var(--brand-700)' }}>
+                  <span>Estimated Total</span>
+                  <span>₹{Math.round(bookModal.price * qty * duration).toLocaleString()}</span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button className="btn btn-secondary btn-full" style={{ height: 44 }} onClick={() => setBookModal(null)}>Cancel</button>
+                <button 
+                  className="btn btn-primary btn-full" 
+                  style={{ height: 44 }}
+                  onClick={() => { setConfirmed(true); toast.success('Booking recorded successfully!'); }}
+                >
+                  Confirm Booking
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Book Modal */}
-        {bookModal && !confirmed && (
-          <div className="modal-overlay" onClick={() => setBookModal(null)}>
-            <div className="modal-box" onClick={e => e.stopPropagation()}>
-              <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1B5E20', marginBottom: 4 }}>📅 Book: {bookModal.name}</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: 20 }}>Confirm your storage booking details</p>
-              <div className="form-group">
-                <label className="form-label">Quantity (Quintals)</label>
-                <input type="number" className="form-input" value={qty} onChange={e => setQty(+e.target.value)} min={1} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Duration (Days)</label>
-                <input type="number" className="form-input" value={duration} onChange={e => setDuration(+e.target.value)} min={1} />
-              </div>
-              <div style={{ background: '#E8F5E9', borderRadius: 12, padding: '14px 16px', marginBottom: 16 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: 4 }}>
-                  <span>Storage cost</span>
-                  <span>₹{bookModal.pricePerDay || bookModal.price}/qtl/day × {qty} qtl × {duration} days</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1.1rem', color: '#1B5E20' }}>
-                  <span>Total</span>
-                  <span>₹{Math.round((bookModal.pricePerDay || bookModal.price) * qty * duration * 100).toLocaleString()}</span>
-                </div>
-              </div>
-              <div className="alert alert-warning" style={{ marginBottom: 16 }}>⚠️ <strong>Cancellation Policy:</strong> Cancellation within 24hrs will incur ₹200 charge</div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button className="btn btn-outline btn-full" onClick={() => setBookModal(null)}>Cancel</button>
-                <button className="btn btn-primary btn-full" onClick={() => { setConfirmed(true); toast.success('Storage booked! OTP sent to your mobile.'); }}>✅ Confirm Booking</button>
-              </div>
-            </div>
-          </div>
-        )}
-
         {confirmed && (
-          <div className="modal-overlay" onClick={() => setConfirmed(false)}>
-            <div className="modal-box" style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
-              <div className="success-icon" style={{ fontSize: 64, marginBottom: 16 }}>🎉</div>
-              <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1B5E20', marginBottom: 8 }}>Booking Confirmed!</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 20 }}>
-                Your storage at <strong>{bookModal?.name}</strong> is confirmed. Details sent via SMS.
-              </p>
-              <div style={{ background: '#F3F4F6', borderRadius: 12, padding: 12, fontSize: '0.8rem', color: 'var(--text-primary)', marginBottom: 20 }}>
-                Booking ID: CS-{Date.now().toString().slice(-6)} | OTP: 847291
+          <div className="modal-overlay" onClick={() => { setConfirmed(false); setBookModal(null); }}>
+            <div className="modal-box" style={{ textAlign: 'center', maxWidth: 400 }} onClick={e => e.stopPropagation()}>
+              <div style={{ width: 64, height: 64, borderRadius: 99, background: '#ECFDF5', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CheckCircle size={32} color="#10B981" />
               </div>
-              <button className="btn btn-primary btn-full" onClick={() => { setConfirmed(false); setBookModal(null); }}>Done</button>
+              <h3 style={{ fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>Booking Confirmed</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: 24, lineHeight: 1.5 }}>
+                Your storage space at <strong>{bookModal?.name}</strong> has been reserved. Check your profile for the digital receipt.
+              </p>
+              <button className="btn btn-primary btn-full" style={{ height: 44 }} onClick={() => { setConfirmed(false); setBookModal(null); }}>Done</button>
             </div>
           </div>
         )}

@@ -1,333 +1,246 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import { Phone, MessageCircle, BookOpen, Mic, ChevronDown, ChevronUp, Send, CheckCircle } from 'lucide-react';
+import { 
+  Phone, MessageCircle, BookOpen, Mic, ChevronDown, ChevronUp, Send, 
+  CheckCircle, LifeBuoy, Play, Search, HelpCircle, FileText, ArrowRight,
+  Shield, Headset, MessageSquare, Clock
+} from 'lucide-react';
 
 const TUTORIALS = [
-  { id: 1, title: 'How to list your crop', duration: '2:14', lang: 'हिंदी', thumb: '📦', views: '12.4K' },
-  { id: 2, title: 'Finding cold storage', duration: '1:58', lang: 'English', thumb: '🧊', views: '8.1K' },
-  { id: 3, title: 'Booking transport', duration: '2:31', lang: 'मराठी', thumb: '🚛', views: '5.6K' },
-  { id: 4, title: 'Getting lab certified', duration: '2:07', lang: 'ਪੰਜਾਬੀ', thumb: '🧪', views: '3.2K' },
-  { id: 5, title: 'AI insights explained', duration: '1:45', lang: 'தமிழ்', thumb: '🤖', views: '2.8K' },
-  { id: 6, title: 'Using voice assistant', duration: '1:22', lang: 'తెలుగు', thumb: '🎤', views: '1.9K' },
+  { id: 1, title: 'Listing crops for sale', duration: '2:14', lang: 'हिंदी', views: '12.4K', color: 'var(--brand-600)' },
+  { id: 2, title: 'Booking cold storage', duration: '1:58', lang: 'English', views: '8.1K', color: '#3B82F6' },
+  { id: 3, title: 'Real-time Transport', duration: '2:31', lang: 'मराठी', views: '5.6K', color: '#F59E0B' },
+  { id: 4, title: 'NABL Certification', duration: '2:07', lang: 'ਪੰਜਾਬੀ', views: '3.2K', color: '#8B5CF6' },
 ];
 
 const FAQS = [
   {
     q: 'How do I list my crop for sale?',
-    qHi: 'मैं अपनी फसल कैसे बेचूं?',
-    a: 'Go to Marketplace → Fill in crop details (type, quantity, grade, location) → Click "List Crop". Buyers will be notified instantly.'
-  },
-  {
-    q: 'How long does lab certification take?',
-    qHi: 'लैब सर्टिफिकेट में कितना समय लगता है?',
-    a: 'NABL accredited labs issue results in 24-48 hours. Government labs may take 72 hours. You receive an SMS when results are ready.'
+    a: 'Navigate to the Marketplace tab and fill in your crop variety, quantity, and grade. Our AI will automatically suggest the best market price based on live Mandi data.'
   },
   {
     q: 'Is my payment guaranteed once I accept an offer?',
-    qHi: 'ऑफर स्वीकार करने पर भुगतान की गारंटी है?',
-    a: 'Yes! All payments are processed through our secure escrow. Money is released to your account only after delivery confirmation.'
+    a: 'Absolutely. All transactions are backed by our secure Escrow system. Funds are released to your bank account only after the buyer confirms the delivery of the goods.'
   },
   {
-    q: 'What if transport partner cancels?',
-    qHi: 'अगर ट्रांसपोर्ट पार्टनर रद्द कर दे तो?',
-    a: 'Call our emergency helpline (1800-XXX-XXXX) immediately. We will arrange an alternative within 2 hours and compensate any losses.'
+    q: 'What happens if a transport partner cancels?',
+    a: 'We monitor active bookings 24/7. In case of a cancellation, our logistics engine automatically reroutes an alternative provider within 2 hours.'
   },
-  {
-    q: 'How is the AI price suggestion calculated?',
-    qHi: 'AI मूल्य सुझाव कैसे गणना होता है?',
-    a: 'We analyze live mandi prices across 500+ mandis, pending buyer orders, weather forecasts, and seasonal demand to suggest the optimal price for your crop.'
-  },
-];
-
-const ONBOARDING = [
-  { title: 'Register & Verify', desc: 'Create account with mobile OTP → Complete profile → Verify Aadhaar KYC', icon: '📱' },
-  { title: 'List Your Crop', desc: 'Go to Marketplace → Add crop details → Get AI price suggestion → List for buyers', icon: '🌾' },
-  { title: 'Receive & Compare Offers', desc: 'Buyers send offers within hours → Compare price, distance, rating → Negotiate if needed', icon: '💼' },
-  { title: 'Confirm & Track Delivery', desc: 'Choose best offer → Book transport → Track live → Receive payment securely', icon: '🚛' },
 ];
 
 export default function HelpPage() {
   const { t } = useTranslation();
   const [openFaq, setOpenFaq] = useState(null);
-  const [grievance, setGrievance] = useState({ type: '', desc: '', mobile: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const [activeTab, setActiveTab] = useState('center');
   const [voiceActive, setVoiceActive] = useState(false);
-  const [activeTab, setActiveTab] = useState('help');
-
-  const handleGrievanceSubmit = (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-    toast.success('Grievance submitted! Ticket ID: GRV-2024-' + Math.floor(Math.random() * 10000));
-  };
 
   return (
-    <div style={{ background: 'var(--surface-bg)', minHeight: '100vh', paddingBottom: 32 }}>
+    <div style={{ background: 'var(--bg-page)', minHeight: '100vh', paddingBottom: 60, color: 'var(--text-primary)', fontFamily: 'Inter, sans-serif' }}>
       <div className="container" style={{ paddingTop: 24 }}>
-        <div className="breadcrumb" style={{ marginBottom: 16 }}>
-          <span className="breadcrumb-item">🏠 {t('nav.home') || 'Home'}</span>
-          <span className="breadcrumb-sep">/</span>
-          <span className="breadcrumb-item active">🆘 {t('nav.help') || 'Help & Support'}</span>
+        
+        {/* ── BREADCRUMB ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-muted)' }}>
+          <span style={{ cursor: 'pointer', transition: 'color 0.15s' }}>Home</span>
+          <span style={{ color: 'var(--border-strong)' }}>/</span>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Support Center</span>
         </div>
 
-        {/* 24x7 Helpline — Prominent */}
-        <div style={{
-          background: 'linear-gradient(135deg, #C62828, #B71C1C)', borderRadius: 20, padding: '24px 28px',
-          marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20,
+        {/* ── EMERGENCY HOTLINE ── */}
+        <div style={{ 
+          background: 'linear-gradient(135deg, #1E293B, #0F172A)', borderRadius: 20, padding: '32px 40px', marginBottom: 32, 
+          color: 'white', position: 'relative', overflow: 'hidden', boxShadow: 'var(--shadow-lg)'
         }}>
-          <div style={{ fontSize: 52 }}>📞</div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.4rem', color: 'white', marginBottom: 4 }}>
-              24×7 Kisan Helpline
+          <div style={{ position: 'absolute', right: -20, top: -20, width: 200, height: 200, background: '#EF4444', filter: 'blur(100px)', opacity: 0.15 }} />
+          
+          <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                <Headset size={24} color="#EF4444" />
+                <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: '#EF4444', textTransform: 'uppercase', letterSpacing: '0.1em' }}>24/7 Priority Helpline</span>
+              </div>
+              <h1 style={{ fontWeight: 800, fontSize: '2rem', letterSpacing: '-0.02em', marginBottom: 8 }}>Connect with an Expert</h1>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9375rem', maxWidth: 450 }}>
+                Direct human assistance for procurement, logistics, or payment disputes. Available in 10+ regional languages.
+              </p>
             </div>
-            <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.875rem', marginBottom: 12 }}>
-              Toll-free · Available in 10 languages · Monday–Sunday
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-end' }}>
+              <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#FCD34D', letterSpacing: '-0.02em' }}>1800-419-1221</div>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button className="btn btn-primary" style={{ background: '#EF4444', height: 44, padding: '0 24px' }}>Call Now</button>
+                <button style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '0 24px', borderRadius: 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <MessageSquare size={18} /> WhatsApp
+                </button>
+              </div>
             </div>
-            <div style={{ fontFamily: 'Poppins', fontWeight: 900, fontSize: '1.8rem', color: '#FFD54F' }}>
-              1800-XXX-XXXX
-            </div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <button className="btn btn-gold btn-lg" onClick={() => toast.success('Calling 1800-XXX-XXXX...')}>
-              📞 Call Now
-            </button>
-            <button
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                background: '#25D366', color: 'white', border: 'none', borderRadius: 12,
-                padding: '10px 20px', cursor: 'pointer', fontWeight: 700, fontSize: '0.875rem', minHeight: 44,
-              }}
-              onClick={() => toast.success('Opening WhatsApp support...')}
-            >
-              <MessageCircle size={16} /> WhatsApp
-            </button>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="tabs">
-          {[['help', '🆘 Help Center'], ['tutorials', '🎥 Tutorials'], ['onboarding', '📖 Getting Started'], ['grievance', '📝 Grievance'], ['voice', '🎤 Voice Help']].map(([id, label]) => (
-            <button key={id} className={`tab-btn ${activeTab === id ? 'active' : ''}`}
-              onClick={() => setActiveTab(id)} style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
-              {label}
+        {/* ── TAB NAVIGATION ── */}
+        <div style={{ 
+          display: 'flex', gap: 8, background: 'var(--bg-card)', padding: 6, borderRadius: 14, 
+          marginBottom: 32, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', width: 'fit-content'
+        }}>
+          {[
+            { id: 'center', label: 'Help Center', icon: <LifeBuoy size={16} /> },
+            { id: 'tutorials', label: 'Video Academy', icon: <Play size={16} /> },
+            { id: 'voice', label: 'Voice Assistant', icon: <Mic size={16} /> },
+            { id: 'grievance', label: 'Grievance', icon: <FileText size={16} /> },
+          ].map(tab => (
+            <button 
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 10,
+                fontSize: '0.875rem', fontWeight: 600, transition: 'all 0.2s', cursor: 'pointer',
+                background: activeTab === tab.id ? 'var(--brand-600)' : 'transparent',
+                color: activeTab === tab.id ? 'white' : 'var(--text-muted)',
+                border: 'none', whiteSpace: 'nowrap'
+              }}
+            >
+              {tab.icon} {tab.label}
             </button>
           ))}
         </div>
 
-        {/* FAQ */}
-        {activeTab === 'help' && (
-          <div>
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: 16 }}>
-              ❓ Frequently Asked Questions
-            </h2>
+        {/* ── TAB CONTENT: CENTER ── */}
+        {activeTab === 'center' && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)', gap: 32 }}>
             <div>
-              {FAQS.map((faq, i) => (
-                <div key={i} className={`accordion-item ${openFaq === i ? 'open' : ''}`}>
-                  <div className="accordion-header" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                    <div>
-                      <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.9rem' }}>{faq.q}</div>
-                      <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>{faq.qHi}</div>
+              <h3 style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 20 }}>Common Questions</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {FAQS.map((faq, i) => (
+                  <div key={i} style={{ 
+                    background: 'var(--bg-card)', borderRadius: 16, border: '1px solid var(--border)', 
+                    overflow: 'hidden', cursor: 'pointer' 
+                  }} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                    <div style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 700, fontSize: '0.9375rem' }}>{faq.q}</span>
+                      {openFaq === i ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                     </div>
-                    {openFaq === i ? <ChevronUp size={18} color="#1B5E20" /> : <ChevronDown size={18} color="#9CA3AF" />}
+                    {openFaq === i && (
+                      <div style={{ padding: '0 20px 20px', fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                        {faq.a}
+                      </div>
+                    )}
                   </div>
-                  {openFaq === i && (
-                    <div className="accordion-body">
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            {/* Live Chat Widget */}
-            <div style={{
-              background: 'var(--card-bg)', borderRadius: 16, padding: 20, marginTop: 20,
-              boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '2px solid #E8F5E9',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#1B5E20', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>🤖</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <div style={{ 
+                background: 'var(--bg-card)', borderRadius: 24, padding: 32, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)',
+                display: 'flex', gap: 20
+              }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: 'var(--brand-50)', color: 'var(--brand-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Shield size={24} />
+                </div>
                 <div>
-                  <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>AI Support Assistant</div>
-                  <div style={{ fontSize: '0.75rem', color: '#4CAF50' }}>🟢 Online · Replies instantly</div>
+                  <h4 style={{ fontWeight: 800, fontSize: '1.125rem', marginBottom: 8 }}>Secure Escrow Policy</h4>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                    Your payments are held in a secure multi-sig escrow until delivery is verified. We ensure zero payment defaults.
+                  </p>
+                  <button style={{ background: 'none', border: 'none', color: 'var(--brand-600)', fontWeight: 800, fontSize: '0.8125rem', marginTop: 12, display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer' }}>
+                    Read Documentation <ArrowRight size={14} />
+                  </button>
                 </div>
               </div>
-              <div style={{ background: '#E8F5E9', borderRadius: '0 12px 12px 12px', padding: '10px 14px', marginBottom: 12, fontSize: '0.875rem', color: '#1B5E20' }}>
-                Namaste! 🙏 Main Aarohan Agri ka AI assistant hun. Aapki kya madad kar sakta hun? Apna sawaal Hindi ya English mein poochein.
-              </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input type="text" className="form-input" placeholder="Type your question..." />
-                <button className="btn btn-primary" style={{ padding: '10px 16px', minHeight: 48 }}>
-                  <Send size={18} />
-                </button>
+
+              <div style={{ 
+                background: 'var(--brand-600)', borderRadius: 24, padding: 32, color: 'white',
+                display: 'flex', gap: 20
+              }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <MessageCircle size={24} />
+                </div>
+                <div>
+                  <h4 style={{ fontWeight: 800, fontSize: '1.125rem', marginBottom: 8 }}>Chat with Support</h4>
+                  <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.5 }}>
+                    Average response time: <strong>4 mins</strong>.
+                  </p>
+                  <button className="btn btn-secondary" style={{ marginTop: 16 }}>Start Live Chat</button>
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Tutorials */}
+        {/* ── TAB CONTENT: TUTORIALS ── */}
         {activeTab === 'tutorials' && (
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                🎥 Video Tutorials — Regional Languages
-              </h2>
-              <select className="form-select" style={{ width: 'auto', background: '#F3F4F6', border: '1px solid var(--border)', padding: '8px 32px 8px 12px', minHeight: 40 }}>
-                <option>All Languages</option>
-                <option>हिंदी</option>
-                <option>English</option>
-                <option>मराठी</option>
-              </select>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 16 }}>
-              {TUTORIALS.map(t => (
-                <div key={t.id} style={{
-                  background: 'var(--card-bg)', borderRadius: 16, overflow: 'hidden',
-                  boxShadow: '0 2px 12px rgba(0,0,0,0.06)', cursor: 'pointer', transition: 'all 0.2s',
-                }}
-                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
-                  onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-                  onClick={() => toast.success(`Playing: ${t.title}`)}>
-                  <div style={{
-                    background: 'linear-gradient(135deg, #1B5E20, #4CAF50)', height: 120,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 52, position: 'relative',
-                  }}>
-                    {t.thumb}
-                    <div style={{
-                      position: 'absolute', width: 44, height: 44, borderRadius: '50%',
-                      background: 'rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 18,
-                    }}>▶️</div>
-                    <div style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.7)', color: 'white', padding: '2px 8px', borderRadius: 6, fontSize: '0.75rem', fontWeight: 600 }}>
-                      {t.duration}
-                    </div>
-                  </div>
-                  <div style={{ padding: '14px 16px' }}>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: 6 }}>{t.title}</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                      <span>{t.lang}</span>
-                      <span>👁️ {t.views} views</span>
-                    </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 24 }}>
+            {TUTORIALS.map(vid => (
+              <div key={vid.id} style={{ 
+                background: 'var(--bg-card)', borderRadius: 20, overflow: 'hidden', border: '1px solid var(--border)',
+                transition: 'transform 0.2s', cursor: 'pointer'
+              }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}>
+                <div style={{ height: 160, background: vid.color, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                  <Play size={40} fill="currentColor" />
+                  <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: 4, fontSize: '0.625rem', fontWeight: 800 }}>{vid.duration}</div>
+                </div>
+                <div style={{ padding: 20 }}>
+                  <div style={{ fontWeight: 800, fontSize: '0.9375rem', marginBottom: 12 }}>{vid.title}</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><HelpCircle size={14} /> {vid.lang}</span>
+                    <span>{vid.views} views</span>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Getting Started / Onboarding */}
-        {activeTab === 'onboarding' && (
-          <div>
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: 20 }}>
-              📖 Getting Started — Step by Step Guide
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {ONBOARDING.map((step, i) => (
-                <div key={i} style={{
-                  display: 'flex', gap: 16, background: 'var(--card-bg)', borderRadius: 16, padding: 20,
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '1px solid #E8F5E9',
-                }}>
-                  <div style={{
-                    width: 56, height: 56, borderRadius: 16, background: '#E8F5E9', fontSize: 28,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                  }}>{step.icon}</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                      <span style={{
-                        width: 24, height: 24, borderRadius: '50%', background: '#1B5E20',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: 'white', fontSize: '0.75rem', fontWeight: 800, flexShrink: 0,
-                      }}>{i + 1}</span>
-                      <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: '#1B5E20', margin: 0 }}>{step.title}</h3>
-                    </div>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{step.desc}</p>
-                  </div>
-                  <CheckCircle size={24} color="#4CAF50" style={{ flexShrink: 0, marginTop: 4 }} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Grievance Form */}
-        {activeTab === 'grievance' && (
-          <div style={{ background: 'var(--card-bg)', borderRadius: 16, padding: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', maxWidth: 500 }}>
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1B5E20', marginBottom: 8 }}>📝 Submit Grievance</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 20 }}>We resolve all grievances within 48 working hours</p>
-
-            {submitted ? (
-              <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                <div className="success-icon" style={{ fontSize: 64, marginBottom: 16 }}>✅</div>
-                <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1B5E20', marginBottom: 8 }}>Grievance Submitted!</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 16 }}>We will contact you within 48 hours.</p>
-                <div style={{ background: '#E8F5E9', borderRadius: 12, padding: 12, fontSize: '0.85rem', color: '#1B5E20', fontWeight: 600 }}>
-                  Ticket ID: GRV-2024-{Math.floor(Math.random() * 9999).toString().padStart(4, '0')}
-                </div>
-                <button className="btn btn-outline btn-sm" style={{ marginTop: 16 }} onClick={() => setSubmitted(false)}>
-                  Submit Another
-                </button>
               </div>
-            ) : (
-              <form onSubmit={handleGrievanceSubmit}>
-                <div className="form-group">
-                  <label className="form-label">Issue Type</label>
-                  <select className="form-select" value={grievance.type} onChange={e => setGrievance({...grievance, type: e.target.value})} required>
-                    <option value="">Select issue type...</option>
-                    <option>Payment not received</option>
-                    <option>Transport partner cancelled</option>
-                    <option>Lab test result delayed</option>
-                    <option>Buyer did not pick up crop</option>
-                    <option>Account/login issue</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Description</label>
-                  <textarea className="form-input" rows={4} placeholder="Describe your issue in detail..." value={grievance.desc} onChange={e => setGrievance({...grievance, desc: e.target.value})} required style={{ minHeight: 100, resize: 'vertical' }} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Contact Mobile</label>
-                  <input type="tel" className="form-input" placeholder="Your mobile number" value={grievance.mobile} onChange={e => setGrievance({...grievance, mobile: e.target.value})} required />
-                </div>
-                <button type="submit" className="btn btn-primary btn-full">
-                  📤 Submit Grievance
-                </button>
-              </form>
-            )}
+            ))}
           </div>
         )}
 
-        {/* Voice Help */}
+        {/* ── TAB CONTENT: VOICE ── */}
         {activeTab === 'voice' && (
-          <div style={{ textAlign: 'center', padding: '32px 20px' }}>
-            <div style={{
-              width: 120, height: 120, borderRadius: '50%', margin: '0 auto 24px',
-              background: voiceActive ? 'linear-gradient(135deg, #FF8F00, #FFC107)' : 'linear-gradient(135deg, #1B5E20, #4CAF50)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 52,
-              boxShadow: voiceActive ? '0 0 0 20px rgba(255,143,0,0.15), 0 0 0 40px rgba(255,143,0,0.05)' : '0 8px 32px rgba(27,94,32,0.3)',
-              transition: 'all 0.3s', cursor: 'pointer',
-            }} onClick={() => { setVoiceActive(!voiceActive); if (!voiceActive) toast.success('🎤 Voice assistant activated! Speak your query...'); }}>
-              🎤
+          <div style={{ maxWidth: 500, margin: '60px auto', textAlign: 'center' }}>
+            <div 
+              onClick={() => { setVoiceActive(!voiceActive); if(!voiceActive) toast.success('Mic Active: Speak your query'); }}
+              style={{ 
+                width: 120, height: 120, borderRadius: 99, background: voiceActive ? 'var(--brand-600)' : 'var(--bg-card)',
+                border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 32px', cursor: 'pointer', transition: 'all 0.3s',
+                boxShadow: voiceActive ? '0 0 0 20px var(--brand-50)' : 'var(--shadow-md)'
+              }}
+            >
+              <Mic size={48} color={voiceActive ? 'white' : 'var(--brand-600)'} />
             </div>
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.3rem', color: '#1B5E20', marginBottom: 8 }}>
-              {voiceActive ? '🎤 Listening...' : 'Voice AI Assistant'}
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.7, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-              Speak in your preferred language — Hindi, Marathi, Punjabi, Tamil and more. <br />
-              <strong style={{ color: '#1B5E20' }}>Say: "Aaj ka soybean bhav batao", "Meri fasal list karo"</strong>
+            <h3 style={{ fontWeight: 800, fontSize: '1.5rem', marginBottom: 12 }}>Speak your Request</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', lineHeight: 1.6, marginBottom: 32 }}>
+              Our multi-lingual AI can help you list crops, check rates, or book a truck via voice commands.
             </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginBottom: 24 }}>
-              {['"Aaj ka gehu ka bhav?"', '"Cold storage kahan hai?"', '"Meri last booking dikhao"', '"Lab test book karo"'].map(cmd => (
-                <button key={cmd} className="filter-pill active" style={{ fontSize: '0.78rem' }}
-                  onClick={() => { toast.success(`Command recognized: ${cmd}`); }}>
-                  {cmd}
-                </button>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10 }}>
+              {['"List my Soybean"', '"Check Indore Mandi prices"', '"Track my shipment"'].map(cmd => (
+                <div key={cmd} style={{ background: 'var(--bg-page)', border: '1px solid var(--border)', padding: '8px 16px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-muted)' }}>{cmd}</div>
               ))}
             </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-              Works on low bandwidth · No internet needed for basic queries
-            </p>
           </div>
         )}
+
+        {/* ── TAB CONTENT: GRIEVANCE ── */}
+        {activeTab === 'grievance' && (
+          <div style={{ maxWidth: 640, margin: '0 auto', background: 'var(--bg-card)', padding: 40, borderRadius: 24, border: '1px solid var(--border)', boxShadow: 'var(--shadow-lg)' }}>
+             <h3 style={{ fontWeight: 800, fontSize: '1.5rem', marginBottom: 12 }}>Formal Grievance</h3>
+             <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', marginBottom: 32 }}>Official submission for complex issues. Guaranteed resolution T+48 hours.</p>
+             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+               <div>
+                 <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: 8 }}>Vocation Category</label>
+                 <select className="form-select" style={{ width: '100%', height: 48 }}>
+                   <option>Payment Hold / Escrow Dispute</option>
+                   <option>Logistics Non-Compliance</option>
+                   <option>Quality Report Contest</option>
+                   <option>Buyer Default</option>
+                 </select>
+               </div>
+               <div>
+                 <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: 8 }}>Detailed Description</label>
+                 <textarea className="form-input" style={{ width: '100%', minHeight: 120, padding: 16 }} placeholder="Please provide order IDs or certificate hashes if relevant..."></textarea>
+               </div>
+               <button className="btn btn-primary btn-full" style={{ height: 48 }} onClick={() => toast.success('Grievance ticket #9822 filed')}>Submit Official Ticket</button>
+             </div>
+          </div>
+        )}
+
       </div>
     </div>
   );

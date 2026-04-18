@@ -5,25 +5,21 @@ import { useApp } from '../context/AppContext';
 import { useForecast } from '../hooks/useForecast';
 import { useCountUp } from '../hooks/useCountUp';
 import { useTimeAgo } from '../hooks/useTimeAgo';
-import { usePrevious } from '../hooks/usePrevious';
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart
-} from 'recharts';
-import {
-  TrendingUp, TrendingDown, Bell, Package, Snowflake, Truck, FlaskConical, Phone,
-  ChevronRight, ArrowUpRight, Star, Zap
+import { 
+  TrendingUp, TrendingDown, Bell, Package, Snowflake, Truck, FlaskConical, Phone, 
+  ChevronRight, ArrowUpRight, Star, Zap, MapPin, Search, Layout, CheckCircle, 
+  Shield, BarChart3, ArrowRight, Activity, Clock
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const QUICK_ACTIONS = [
-  { icon: Package,      label: 'List My Crop',   emoji: '📦', path: '/marketplace',   color: '#1B5E20' },
-  { icon: TrendingUp,   label: 'View Prices',    emoji: '📈', path: '/price-tracker', color: '#2196F3' },
-  { icon: Snowflake,    label: 'Cold Storage',   emoji: '🧊', path: '/cold-storage',  color: '#0288D1' },
-  { icon: Truck,        label: 'Book Transport', emoji: '🚛', path: '/transport',     color: '#E65100' },
-  { icon: FlaskConical, label: 'Book Lab Test',  emoji: '🧪', path: '/lab-testing',   color: '#6A1B9A' },
+  { icon: Package,      label: 'List My Crop',   path: '/marketplace',   color: 'var(--brand-600)' },
+  { icon: TrendingUp,   label: 'View Prices',    path: '/price-tracker', color: '#3B82F6' },
+  { icon: Snowflake,    label: 'Cold Storage',   path: '/cold-storage',  color: '#0EA5E9' },
+  { icon: Truck,        label: 'Book Transport', path: '/transport',     color: '#F59E0B' },
+  { icon: FlaskConical, label: 'Book Lab Test',  path: '/lab-testing',   color: '#8B5CF6' },
 ];
 
-// Native language greetings map
 const GREETINGS = {
   hi: 'नमस्ते',
   en: 'Namaste',
@@ -32,241 +28,186 @@ const GREETINGS = {
   gu: 'નમસ્તે',
   ta: 'வணக்கம்',
   te: 'నమస్కారం',
-  kn: 'ನಮಸ್ಕಾರ',
-  bn: 'নমস্কার',
-  or: 'ନମସ୍କାର',
+  kn: 'ನમಸ್કાર',
+  bn: 'নમস্কার',
 };
 
 export default function FarmerDashboard() {
   const { t, i18n } = useTranslation();
   const { user, mandiPrices, notifications } = useApp();
-  const navigate = useNavigate();
-  const [chartRange, setChartRange] = useState('7d');
-  const { history, currentPrice } = useForecast('Soybean', chartRange === '30d' ? 30 : 7);
-  const [showAlert, setShowAlert] = useState(true);
+  const [locationText, setLocationText] = useState('Indore, MP');
 
-  // Real-time GPS location
-  const [locationText, setLocationText] = useState('Locating...');
+  const { currentPrice } = useForecast('Soybean', 7);
+  const { count: animatedPrice } = useCountUp(currentPrice || 5200, 1200);
+
   useEffect(() => {
-    if (!navigator.geolocation) { setLocationText('India'); return; }
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
         try {
-          const { latitude, longitude } = pos.coords;
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`);
           const data = await res.json();
-          const city = data.address?.city || data.address?.town || data.address?.village || data.address?.county || '';
-          const state = data.address?.state || '';
-          setLocationText(`${city}${city && state ? ', ' : ''}${state}`);
-        } catch { setLocationText('India'); }
-      },
-      () => setLocationText('India') // permission denied fallback
-    );
-  }, []);
-
-  // Advanced Layer 4 UX
-  const { count: animatedPrice } = useCountUp(currentPrice || 5200, 1500);
-  const previousPrice = usePrevious(currentPrice);
-  const priceFlashClass = previousPrice && currentPrice !== previousPrice 
-    ? (currentPrice > previousPrice ? 'flash-green' : 'flash-red') 
-    : '';
-  
-  // Find latest update time from mandiPrices array
-  const lastUpdated = mandiPrices && mandiPrices.length > 0 ? mandiPrices[0].lastUpdate : Date.now();
-  const timeText = useTimeAgo(lastUpdated);
-
-  const middlemanProfit = Math.round((currentPrice || 5200) * 0.85); // 15% deductions
-  const directProfit    = currentPrice || 5200;
-  const saving          = directProfit - middlemanProfit;
-  
-  const baseChartData = history && history.length > 0 
-    ? history.map(h => ({ day: h.label || h.date, price: h.price }))
-    : [];
-
-  // Live realtime chart — seeds from history, appends new ticks every 30s
-  const [liveChartData, setLiveChartData] = useState([]);
-  useEffect(() => {
-    if (baseChartData.length > 0) setLiveChartData(baseChartData);
-  }, [history]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLiveChartData(prev => {
-        if (prev.length === 0) return prev;
-        const last = prev[prev.length - 1];
-        const drift = (Math.random() - 0.48) * 60; // slight upward bias
-        const newPrice = Math.max(4000, Math.round(last.price + drift));
-        const now = new Date();
-        const label = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-        const next = [...prev.slice(-13), { day: label, price: newPrice }]; // keep last 14 points
-        return next;
+          setLocationText(data.address?.city || data.address?.town || 'Indore, MP');
+        } catch { setLocationText('Indore, MP'); }
       });
-    }, 30000); // every 30 seconds
-    return () => clearInterval(interval);
+    }
   }, []);
 
   return (
-    <div style={{ background: 'var(--bg-page)', minHeight: '100vh', paddingBottom: 40 }}>
+    <div style={{ background: 'var(--bg-page)', minHeight: '100vh', paddingBottom: 60, color: 'var(--text-primary)', fontFamily: 'Inter, sans-serif' }}>
       <div className="container" style={{ paddingTop: 24 }}>
-
-        {/* Page Header */}
-        <div style={{ marginBottom: 24 }}>
-          <div className="breadcrumb" style={{ paddingTop: 0, paddingBottom: 8 }}>
-            <span className="breadcrumb-item">Home</span>
-            <span className="breadcrumb-sep">/</span>
-            <span className="breadcrumb-item active">Dashboard</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+        
+        {/* ── TOP NAV STRIP ── */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--brand-600)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Layout size={24} />
+            </div>
             <div>
-              <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.03em', marginBottom: 4 }}>
-                {GREETINGS[i18n.language] || 'Good Morning'}, {user?.name?.split(' ')[0] || 'Farmer'} 👋
+              <h1 style={{ fontWeight: 800, fontSize: '1.5rem', letterSpacing: '-0.02em' }}>
+                {GREETINGS[i18n.language] || 'Namaste'}, {user?.name?.split(' ')[0] || 'Farmer'}
               </h1>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>📍 {locationText}</span>
-                <span style={{ color: 'var(--border)' }}>·</span>
-                <span className="badge badge-green">✅ Certified Farmer</span>
-                <span className="badge badge-gold">⭐ Top Seller</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
+                <MapPin size={12} /> {locationText} · <span style={{ color: 'var(--success)', fontWeight: 700 }}>VERIFIED PRO</span>
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)', marginBottom: 4, fontWeight: 500 }}>
-                  Profile Completion
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ width: 100, height: 6, background: 'var(--gray-200)', borderRadius: 9999, overflow: 'hidden' }}>
-                    <div style={{ width: `${user?.profileComplete || 80}%`, height: '100%', background: 'var(--brand-600)', borderRadius: 9999, transition: 'width 0.6s ease' }} />
+          </div>
+          
+          <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+              <span style={{ fontSize: '0.625rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Seed Wallet</span>
+              <span style={{ fontWeight: 800, fontSize: '1.125rem' }}>₹12,450</span>
+            </div>
+            <div style={{ width: 44, height: 44, borderRadius: 12, border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', cursor: 'pointer' }}>
+              <Bell size={20} />
+              <div style={{ position: 'absolute', top: 10, right: 10, width: 8, height: 8, background: 'var(--accent-red)', borderRadius: 99, border: '2px solid white' }} />
+            </div>
+          </div>
+        </div>
+
+        {/* ── QUICK METRICS ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
+          {[
+            { label: 'Live Mandi Avg', value: `₹${animatedPrice.toLocaleString()}`, change: '+2.4%', icon: <Activity size={18} />, color: 'var(--brand-600)' },
+            { label: 'Pending Offers', value: '03', change: 'New', icon: <Package size={18} />, color: '#3B82F6' },
+            { label: 'Storage Usage', value: '450kg', change: '80% full', icon: <Snowflake size={18} />, color: '#0EA5E9' },
+            { label: 'Trust Score', value: '98', change: 'Top 1%', icon: <Star size={18} />, color: '#F59E0B' },
+          ].map((stat, i) => (
+            <div key={i} style={{ background: 'var(--bg-card)', padding: '20px', borderRadius: 20, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+              <div style={{ color: stat.color, marginBottom: 12 }}>{stat.icon}</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 2 }}>{stat.value}</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.625rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>{stat.label}</span>
+                <span style={{ fontSize: '0.6875rem', fontWeight: 800, color: 'var(--success)' }}>{stat.change}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)', gap: 32, alignItems: 'start' }}>
+          
+          {/* ── MAIN CONTENT: ACTIONS & AI ── */}
+          <div>
+            <h3 style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 16 }}>Operational Actions</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 32 }}>
+              {QUICK_ACTIONS.map(action => (
+                <Link key={action.path} to={action.path} style={{ textDecoration: 'none' }}>
+                  <div style={{ 
+                    background: 'var(--bg-card)', padding: '24px 16px', borderRadius: 20, border: '1px solid var(--border)', 
+                    textAlign: 'center', transition: 'all 0.2s', cursor: 'pointer'
+                  }} onMouseEnter={e => e.currentTarget.style.borderColor = action.color}>
+                    <div style={{ color: action.color, marginBottom: 12, display: 'flex', justifyContent: 'center' }}>
+                      <action.icon size={28} />
+                    </div>
+                    <div style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'var(--text-primary)' }}>{action.label}</div>
                   </div>
-                  <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-primary)' }}>{user?.profileComplete || 80}%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Fair Price Alert */}
-        {showAlert && (
-          <div style={{
-            background: 'var(--bg-card)',
-            border: '1px solid #fde68a',
-            borderLeft: '4px solid var(--accent-amber)',
-            borderRadius: 10, padding: '12px 16px', marginBottom: 20,
-            display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
-          }} onClick={() => toast.success('Navigating to AI Insights...')}>
-            <span style={{ fontSize: 18 }}>🔔</span>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 600, color: '#92400e', fontSize: '0.875rem' }}>Price Alert</div>
-              <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
-                Soybean {t('dashboard.priceAlert')} ₹{(currentPrice || 5200).toLocaleString()} — {t('dashboard.bestTimeSell')}
-              </div>
-            </div>
-            <button onClick={(e) => { e.stopPropagation(); setShowAlert(false); }} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 4, minHeight: 30, fontSize: '1rem' }}>✕</button>
-          </div>
-        )}
-
-
-        {/* Live Mandi Prices Ticker */}
-        <div style={{ background: 'var(--card-bg)', borderRadius: 16, marginBottom: 24, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
-            <div className="live-dot" />
-            <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#1B5E20' }}>{t('dashboard.livePrices')}</span>
-            <Link to="/price-tracker" style={{ marginLeft: 'auto', fontSize: '0.78rem', color: '#1B5E20', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 3 }}>
-              Full Prices <ChevronRight size={14} />
-            </Link>
-          </div>
-          <div className="ticker-wrap" style={{ background: 'var(--surface-bg)' }}>
-            <div className="ticker-content">
-              {[...mandiPrices, ...mandiPrices].map((item, i) => (
-                <span key={i} style={{ marginRight: 48, fontSize: '0.875rem', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontWeight: 700, color: '#1B5E20' }}>{t(item.cropKey)}</span>
-                  <span style={{ fontFamily: 'Poppins', fontWeight: 800, color: 'var(--text-primary)' }}>₹{item.price.toLocaleString()}</span>
-                  <span style={{ color: item.change >= 0 ? '#4CAF50' : '#F44336', fontWeight: 600 }}>
-                    {item.change >= 0 ? '▲' : '▼'} ₹{Math.abs(item.change)}
-                  </span>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{item.mandi}</span>
-                  <span style={{ color: '#e2e8f0' }}>|</span>
-                </span>
+                </Link>
               ))}
-            </div>
-          </div>
-        </div>
-
-
-        {/* CTA to Full Price Dashboard */}
-        <Link to="/price-tracker" style={{ textDecoration: 'none', display: 'block', marginBottom: 24 }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            background: 'linear-gradient(135deg, #E8F5E9, #C8E6C9)',
-            borderRadius: 14, padding: '14px 20px', border: '1px solid #A5D6A7',
-            transition: 'all 0.2s',
-          }}
-            onMouseEnter={e => e.currentTarget.style.background = 'linear-gradient(135deg, #C8E6C9, #A5D6A7)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'linear-gradient(135deg, #E8F5E9, #C8E6C9)'}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: '1.5rem' }}>📈</span>
-              <div>
-                <div style={{ fontWeight: 700, color: '#1B5E20', fontSize: '0.9rem' }}>Open Full Market Price Dashboard</div>
-                <div style={{ fontSize: '0.75rem', color: '#388E3C' }}>7D · 30D · 90D charts · AI forecast · Price alerts</div>
-              </div>
-            </div>
-            <ChevronRight size={20} color="#1B5E20" />
-          </div>
-        </Link>
-
-        {/* Quick Actions */}
-        <div style={{ marginBottom: 24 }}>
-          <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', marginBottom: 14 }}>
-            ⚡ Quick Actions
-          </h3>
-          <div className="grid-5" style={{ gap: 10 }}>
-            {QUICK_ACTIONS.map(({ icon: Icon, label, emoji, path, color }) => (
-              <Link key={path} to={path} style={{ textDecoration: 'none' }}>
-                <div style={{
-                  background: 'var(--card-bg)', borderRadius: 14, padding: '16px 8px', textAlign: 'center',
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '2px solid transparent',
-                  cursor: 'pointer', transition: 'all 0.2s',
-                }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = color}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
-                >
-                  <div style={{ fontSize: 28, marginBottom: 8 }}>{emoji}</div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.3 }}>{label}</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Notifications Panel */}
-        <div style={{ background: 'var(--card-bg)', borderRadius: 16, padding: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)' }}>
-              🔔 Recent Activity
-            </h3>
-            <Link to="/ai-insights" style={{ fontSize: '0.8rem', color: '#1B5E20', fontWeight: 600, textDecoration: 'none' }}>
-              View All →
-            </Link>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {notifications.map(n => (
-              <div key={n.id} style={{
-                display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 16px',
-                background: n.read ? '#FAFAF7' : '#F1F8E9', borderRadius: 12,
-                border: `1px solid ${n.read ? '#f0f0f0' : '#C8E6C9'}`, cursor: 'pointer',
+              <div style={{ 
+                background: 'var(--brand-600)', padding: '24px 16px', borderRadius: 20, color: 'white',
+                display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gridColumn: 'span 1'
               }}>
-                <div style={{ fontSize: 20, marginTop: 2 }}>
-                  {n.type === 'offer' ? '💼' : n.type === 'alert' ? '🔔' : n.type === 'transport' ? '🚛' : '🧪'}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: n.read ? 400 : 600, color: 'var(--text-primary)' }}>{n.text}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 3 }}>{n.time}</div>
-                </div>
-                {!n.read && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#4CAF50', flexShrink: 0, marginTop: 6 }} />}
+                <Zap size={28} style={{ marginBottom: 12 }} />
+                <div style={{ fontSize: '0.8125rem', fontWeight: 800 }}>Smart Sync</div>
               </div>
-            ))}
+            </div>
+
+            {/* AI Insights Banner */}
+            <div style={{ 
+              background: 'linear-gradient(135deg, #0F172A, #1E293B)', borderRadius: 24, padding: 32, color: 'white',
+              position: 'relative', overflow: 'hidden', boxShadow: 'var(--shadow-lg)'
+            }}>
+              <div style={{ position: 'absolute', right: -30, top: -30, width: 150, height: 150, background: 'var(--brand-600)', filter: 'blur(80px)', opacity: 0.3 }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                  <Zap size={20} color="var(--brand-400)" />
+                  <span style={{ fontSize: '0.625rem', fontWeight: 800, color: 'var(--brand-400)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Intelligence Engine</span>
+                </div>
+                <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 12 }}>Soybean prices expected to spike by 8% next week.</h3>
+                <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.875rem', lineHeight: 1.6, marginBottom: 24 }}>
+                  Our Gemini-powered models detected a demand surge in West MP mandis. We recommend holding your current stock for 5-7 more days.
+                </p>
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <Link to="/ai-insights" className="btn btn-primary" style={{ height: 40, padding: '0 20px', fontSize: '0.75rem' }}>View Detail Report</Link>
+                  <button style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '0 20px', borderRadius: 10, fontSize: '0.75rem', fontWeight: 700 }}>Dismiss</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── RIGHT COLUMN: FEED & ACTIVITY ── */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div style={{ background: 'var(--bg-card)', borderRadius: 24, padding: 24, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <h3 style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Recent Activity</h3>
+                <button style={{ background: 'none', border: 'none', color: 'var(--brand-600)', fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer' }}>Mark all read</button>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {notifications.map(n => (
+                  <div key={n.id} style={{ 
+                    display: 'flex', gap: 14, padding: 16, borderRadius: 16, background: n.read ? 'transparent' : 'var(--bg-page)',
+                    border: n.read ? '1px solid transparent' : '1px solid var(--border)'
+                  }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: 'white', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {n.type === 'offer' ? <Package size={18} color="var(--brand-600)" /> : <Zap size={18} color="#F59E0B" />}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>{n.text}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}><Clock size={12} /> {n.time}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ background: 'var(--bg-card)', borderRadius: 24, padding: 24, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+              <h3 style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 20 }}>Market Pulse</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {mandiPrices.slice(0, 3).map((item, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{ width: 8, height: 8, borderRadius: 99, background: item.change >= 0 ? 'var(--success)' : 'var(--accent-red)' }} />
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '0.875rem' }}>{item.crop}</div>
+                        <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>{item.mandi}</div>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontWeight: 800, fontSize: '0.9375rem' }}>₹{item.price.toLocaleString()}</div>
+                      <div style={{ fontSize: '0.6875rem', fontWeight: 700, color: item.change >= 0 ? 'var(--success)' : 'var(--accent-red)' }}>
+                        {item.change >= 0 ? '+' : ''}₹{Math.abs(item.change)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Link to="/price-tracker" style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 24, color: 'var(--brand-600)', fontSize: '0.8125rem', fontWeight: 800, textDecoration: 'none' }}>
+                Full Market Dashboard <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   );

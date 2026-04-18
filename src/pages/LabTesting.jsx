@@ -2,49 +2,59 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../context/AppContext';
 import toast from 'react-hot-toast';
-import { Upload, Camera, Droplets, Thermometer, FlaskConical, Download } from 'lucide-react';
+import { 
+  Upload, Camera, Droplets, Thermometer, FlaskConical, Download, 
+  MapPin, Clock, Shield, Star, CheckCircle, Zap, Info, ArrowRight,
+  Monitor, Calendar, History, Sparkles, Layout
+} from 'lucide-react';
 
 const IOT_DATA = [
-  { label: 'Soil Moisture', icon: Droplets, value: 68, max: 100, unit: '%', color: '#1976D2', status: 'Optimal' },
-  { label: 'Temperature', icon: Thermometer, value: 26, max: 50, unit: '°C', color: '#E65100', status: 'Good' },
-  { label: 'pH Level', icon: FlaskConical, value: 6.8, max: 14, unit: 'pH', color: '#6A1B9A', status: 'Optimal' },
+  { label: 'Soil Moisture', icon: Droplets, value: 68, max: 100, unit: '%', color: '#3B82F6', status: 'Optimal' },
+  { label: 'Temperature', icon: Thermometer, value: 26, max: 50, unit: '°C', color: '#EF4444', status: 'Good' },
+  { label: 'pH Level', icon: FlaskConical, value: 6.8, max: 14, unit: 'pH', color: '#8B5CF6', status: 'Optimal' },
 ];
 
-const HISTORY = [
-  { date: '15 Mar 2024', crop: 'Soybean', grade: 'A', status: 'Certified', download: true },
-  { date: '28 Jan 2024', crop: 'Wheat', grade: 'A+', status: 'Certified', download: true },
-  { date: '10 Nov 2023', crop: 'Gram', grade: 'B', status: 'Expired', download: false },
+const QUALITY_HISTORY = [
+  { id: 'CERT-001', date: '15 Mar 2024', crop: 'Soybean', grade: 'A', status: 'Certified', hash: '0x8fa...c91' },
+  { id: 'CERT-002', date: '28 Jan 2024', crop: 'Wheat', grade: 'A+', status: 'Certified', hash: '0x3bb...2af' },
+  { id: 'CERT-003', date: '10 Nov 2023', crop: 'Gram', grade: 'B', status: 'Expired', hash: '0x4ca...88b' },
 ];
 
 function IotGauge({ label, icon: Icon, value, max, unit, color, status }) {
   const pct = (value / max) * 100;
-  const deg = (pct / 100) * 360;
+  const rad = 36;
+  const circ = 2 * Math.PI * rad;
+  const offset = circ - (pct / 100) * circ;
+
   return (
-    <div style={{ textAlign: 'center' }}>
-      <div style={{
-        width: 100, height: 100, borderRadius: '50%', margin: '0 auto 12px',
-        background: `conic-gradient(${color} ${deg}deg, #e2e8f0 ${deg}deg)`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
-      }}>
-        <div style={{
-          width: 72, height: 72, borderRadius: '50%', background: 'var(--card-bg)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <Icon size={18} color={color} />
-          <span style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '0.95rem', color, lineHeight: 1.2 }}>
-            {value}{unit}
-          </span>
+    <div style={{ textAlign: 'center', background: 'var(--bg-card)', padding: 20, borderRadius: 20, border: '1px solid var(--border)', flex: 1, minWidth: 160 }}>
+      <div style={{ position: 'relative', width: 80, height: 80, margin: '0 auto 16px' }}>
+        <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+          <circle cx="40" cy="40" r={rad} stroke="var(--bg-page)" strokeWidth="6" fill="none" />
+          <circle cx="40" cy="40" r={rad} stroke={color} strokeWidth="6" fill="none" 
+            strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset}
+            style={{ transition: 'stroke-dashoffset 1s ease' }} />
+        </svg>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color }}>
+          <Icon size={24} />
         </div>
       </div>
-      <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)' }}>{label}</div>
-      <div style={{ fontSize: '0.75rem', color: '#4CAF50', fontWeight: 600 }}>● {status}</div>
+      <div style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--text-primary)', marginBottom: 2 }}>{value}{unit}</div>
+      <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>{label}</div>
+      <div style={{ 
+        display: 'inline-flex', alignItems: 'center', gap: 4, 
+        background: 'var(--success-50)', color: 'var(--success-700)',
+        padding: '2px 8px', borderRadius: 99, fontSize: '0.625rem', fontWeight: 800
+      }}>
+        <div style={{ width: 6, height: 6, borderRadius: 99, background: 'var(--success)' }} /> {status}
+      </div>
     </div>
   );
 }
 
 export default function LabTesting() {
   const { t } = useTranslation();
-  const { labs } = useApp();
+  const { labs, user } = useApp();
   const [activeTab, setActiveTab] = useState('book');
   const [form, setForm] = useState({ crop: '', qty: '', location: '', date: '' });
   const [booked, setBooked] = useState(false);
@@ -54,257 +64,274 @@ export default function LabTesting() {
   const handleBook = (e) => {
     e.preventDefault();
     setBooked(true);
-    toast.success('Lab test booked! Lab partner will confirm within 2 hours.');
+    toast.success('Lab test booked successfully!');
   };
 
-  const handleImageUpload = () => {
+  const simulateAiAnalysis = () => {
     setAnalyzing(true);
+    setAiResult(null);
     setTimeout(() => {
       setAnalyzing(false);
-      setAiResult({ grade: 'A', moisture: '11.2%', protein: '38.5%', purity: '98.7%', recommendation: 'Premium quality — sell directly to premium buyers for best price!' });
-      toast.success('AI analysis complete!');
+      setAiResult({ 
+        grade: 'A+', moisture: '11.2%', purity: '99.4%', starch: '68.5%',
+        recommendation: 'Exceptional quality batch. Recommended for premium export channel or specialty procurement.'
+      });
+      toast.success('AI Analysis Insight Generated');
     }, 2500);
   };
 
   return (
-    <div style={{ background: 'var(--surface-bg)', minHeight: '100vh', paddingBottom: 32 }}>
+    <div style={{ background: 'var(--bg-page)', minHeight: '100vh', paddingBottom: 60, color: 'var(--text-primary)', fontFamily: 'Inter, sans-serif' }}>
       <div className="container" style={{ paddingTop: 24 }}>
-        <div className="breadcrumb" style={{ marginBottom: 16 }}>
-          <span className="breadcrumb-item">🏠 {t('nav.home') || 'Home'}</span>
-          <span className="breadcrumb-sep">/</span>
-          <span className="breadcrumb-item active">🧪 {t('nav.labTest') || 'Quality Testing'}</span>
+        
+        {/* ── BREADCRUMB ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-muted)' }}>
+          <span style={{ cursor: 'pointer', transition: 'color 0.15s' }}>Home</span>
+          <span style={{ color: 'var(--border-strong)' }}>/</span>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Quality Certification</span>
         </div>
 
-        <h1 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', color: '#1B5E20', marginBottom: 4 }}>
-          🧪 {t('nav.labTest') || 'Quality & Lab Testing'}
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 24 }}>
-          Get your crop certified and command premium prices in the market
-        </p>
-
-        {/* Certified Farmer Badge Preview */}
-        <div style={{
-          background: 'linear-gradient(135deg, #FFF8E1, #FFF3CD)', border: '2px solid #FF8F00',
-          borderRadius: 16, padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 16,
+        {/* ── ENTERPRISE HEADER ── */}
+        <div style={{ 
+          background: 'linear-gradient(135deg, #065F46, #047857)', borderRadius: 20, padding: '32px 40px', marginBottom: 32, 
+          color: 'white', position: 'relative', overflow: 'hidden', boxShadow: 'var(--shadow-lg)'
         }}>
-          <div style={{ fontSize: 48 }}>🏆</div>
-          <div>
-            <div style={{ fontWeight: 700, color: '#E65100', fontSize: '0.95rem' }}>Certified Farmer Badge</div>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Complete all lab tests to earn your Certified Farmer badge and unlock premium buyer access</div>
-          </div>
-          <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
-            <div style={{ fontWeight: 800, color: '#FF8F00', fontSize: '1.1rem' }}>75%</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Complete</div>
-            <div style={{ width: 80, height: 6, background: '#e2e8f0', borderRadius: 100, marginTop: 4 }}>
-              <div style={{ width: '75%', height: '100%', background: '#FF8F00', borderRadius: 100 }} />
+          <div style={{ position: 'absolute', right: -20, top: -20, width: 200, height: 200, background: '#10B981', filter: 'blur(100px)', opacity: 0.2 }} />
+          
+          <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ flex: 1 }}>
+              <h1 style={{ fontWeight: 800, fontSize: '2rem', letterSpacing: '-0.02em', marginBottom: 8 }}>Quality Assurance</h1>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9375rem', maxWidth: 500 }}>
+                Certify your harvest with NABL accredited labs and unlock premium pricing tiers through immutable quality verification.
+              </p>
+            </div>
+            
+            <div style={{ 
+              background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: 20, padding: '20px 24px', backdropFilter: 'blur(10px)', textAlign: 'right'
+            }}>
+              <div style={{ fontSize: '0.6875rem', fontWeight: 700, opacity: 0.6, textTransform: 'uppercase', marginBottom: 4 }}>Certification Status</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: 8 }}>75% Verified</div>
+              <div style={{ width: 140, height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 99, marginLeft: 'auto' }}>
+                <div style={{ width: '75%', height: '100%', background: 'white', borderRadius: 99 }} />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="tabs">
-          {[['book', '📅 Book Test'], ['upload', '📋 Upload Cert'], ['ai', '🤖 AI Analysis'], ['iot', '📡 IoT Data'], ['history', '📜 History']].map(([id, label]) => (
-            <button key={id} className={`tab-btn ${activeTab === id ? 'active' : ''}`}
-              onClick={() => setActiveTab(id)} style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
-              {label}
+        {/* ── TAB NAVIGATION ── */}
+        <div style={{ 
+          display: 'flex', gap: 8, background: 'var(--bg-card)', padding: 6, borderRadius: 14, 
+          marginBottom: 32, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)', width: 'fit-content', overflowX: 'auto'
+        }}>
+          {[
+            { id: 'book', label: 'Book Lab Test', icon: <FlaskConical size={16} /> },
+            { id: 'ai', label: 'AI Quality Bot', icon: <Sparkles size={16} /> },
+            { id: 'iot', label: 'Field Monitor', icon: <Monitor size={16} /> },
+            { id: 'history', label: 'Certificates', icon: <History size={16} /> },
+          ].map(tab => (
+            <button 
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 10,
+                fontSize: '0.875rem', fontWeight: 600, transition: 'all 0.2s', cursor: 'pointer',
+                background: activeTab === tab.id ? 'var(--brand-600)' : 'transparent',
+                color: activeTab === tab.id ? 'white' : 'var(--text-muted)',
+                border: 'none', whiteSpace: 'nowrap'
+              }}
+            >
+              {tab.icon} {tab.label}
             </button>
           ))}
         </div>
 
-        {/* Book Test Tab */}
+        {/* ── TAB CONTENT: BOOK ── */}
         {activeTab === 'book' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
-            <div style={{ background: 'var(--card-bg)', borderRadius: 20, padding: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-              <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: '#1B5E20', marginBottom: 20 }}>
-                📅 Book a Lab Test
-              </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 32 }}>
+            <div style={{ background: 'var(--bg-card)', borderRadius: 20, padding: 32, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
+                <Calendar size={20} color="var(--brand-600)" />
+                <h3 style={{ fontWeight: 800, fontSize: '1.125rem' }}>Schedule Field Collection</h3>
+              </div>
+              
               {booked ? (
-                <div style={{ textAlign: 'center', padding: '24px 0' }}>
-                  <div className="success-icon" style={{ fontSize: 60, marginBottom: 16 }}>✅</div>
-                  <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1B5E20', marginBottom: 8 }}>Test Booked!</h3>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 16 }}>AgriTest Labs will collect sample within 24 hours</p>
-                  <div style={{ background: '#E8F5E9', borderRadius: 12, padding: 12, fontSize: '0.8rem', color: '#1B5E20', fontWeight: 600 }}>
-                    Booking ID: LAB-{Date.now().toString().slice(-6)}
+                <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                  <div style={{ width: 64, height: 64, background: 'var(--success-50)', color: 'var(--success)', borderRadius: 99, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                    <CheckCircle size={32} />
                   </div>
-                  <button className="btn btn-outline btn-sm" style={{ marginTop: 16 }} onClick={() => setBooked(false)}>Book Another</button>
+                  <h4 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 8 }}>Request Submitted</h4>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: 24 }}>AgriTest NABL Lab will arrive at your location within 24 hours.</p>
+                  <button className="btn btn-secondary" onClick={() => setBooked(false)}>Book Another Test</button>
                 </div>
               ) : (
-                <form onSubmit={handleBook}>
-                  {[['Crop Type', 'crop', 'text', 'e.g. Soybean MT-101'],
-                    ['Quantity (Quintals)', 'qty', 'number', 'e.g. 30'],
-                    ['Location', 'location', 'text', 'Village, Tehsil, District'],
-                    ['Preferred Date', 'date', 'date', '']].map(([label, field, type, placeholder]) => (
-                    <div className="form-group" key={field}>
-                      <label className="form-label">{label}</label>
-                      <input type={type} className="form-input" placeholder={placeholder}
-                        value={form[field]} onChange={e => setForm({ ...form, [field]: e.target.value })} required />
+                <form onSubmit={handleBook} style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
+                  {[
+                    { label: 'Commodity Type', placeholder: 'e.g. Soybean FAQ', full: true },
+                    { label: 'Batch Volume (qtl)', placeholder: '50' },
+                    { label: 'Target Mandi', placeholder: 'Indore APMC' },
+                    { label: 'Collection Point', placeholder: 'Farm Gate / Warehouse', full: true },
+                  ].map((field, i) => (
+                    <div key={i} style={{ gridColumn: field.full ? '1 / -1' : 'auto' }}>
+                      <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>{field.label}</label>
+                      <input type="text" placeholder={field.placeholder} className="form-input" style={{ width: '100%' }} required />
                     </div>
                   ))}
-                  <button type="submit" className="btn btn-primary btn-full">📅 Book Lab Test</button>
+                  <div style={{ gridColumn: '1 / -1', marginTop: 12 }}>
+                    <button type="submit" className="btn btn-primary btn-full" style={{ height: 48 }}>Confirm Booking & Schedule Collection</button>
+                  </div>
                 </form>
               )}
             </div>
 
-            {/* Lab Partner List */}
-            <div>
-              <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: 14 }}>
-                🏥 Lab Partners Nearby
-              </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {labs.map((lab, i) => (
-                  <div key={lab.id} style={{
-                    background: 'var(--card-bg)', borderRadius: 16, padding: 18,
-                    border: `2px solid ${i === 0 ? '#1B5E20' : '#f0f0f0'}`, boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-                  }}>
-                    {i === 0 && <div style={{ marginBottom: 8 }}><span className="badge badge-green">⭐ Recommended</span></div>}
-                    <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', gap: 12 }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 700, color: '#1B5E20', marginBottom: 6 }}>🔬 {lab.name}</div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                          <span>📍 {lab.distance} km</span>
-                          <span>⏱️ {lab.turnaround}</span>
-                          <span>💰 ₹{lab.price}</span>
-                          <span className="badge badge-blue">{lab.accredited}</span>
-                          <span>⭐ {lab.rating}</span>
-                        </div>
-                      </div>
-                      <button className="btn btn-outline btn-sm"
-                        onClick={() => { setActiveTab('book'); setBooked(false); }}>
-                        Select
-                      </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <h4 style={{ fontWeight: 800, fontSize: '0.875rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Available Lab Partners</h4>
+              {labs.map(lab => (
+                <div key={lab.id} style={{ background: 'var(--bg-card)', padding: 20, borderRadius: 16, border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                    <div>
+                      <div style={{ fontWeight: 800, fontSize: '0.9375rem', marginBottom: 2 }}>{lab.name}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={12} /> {lab.distance}km away</div>
                     </div>
+                    <div style={{ background: 'var(--brand-50)', color: 'var(--brand-700)', padding: '2px 8px', borderRadius: 99, fontSize: '0.625rem', fontWeight: 800 }}>{lab.accredited}</div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Upload Certificate Tab */}
-        {activeTab === 'upload' && (
-          <div style={{ background: 'var(--card-bg)', borderRadius: 20, padding: 32, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', maxWidth: 480 }}>
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: '#1B5E20', marginBottom: 20 }}>
-              📋 Upload Existing Certificate
-            </h2>
-            <div
-              style={{ border: '3px dashed #C8E6C9', borderRadius: 16, padding: '48px 32px', textAlign: 'center', cursor: 'pointer', marginBottom: 20 }}
-              onClick={() => toast.success('File uploaded successfully!')}
-            >
-              <Upload size={48} color="#4CAF50" style={{ margin: '0 auto 16px' }} />
-              <div style={{ fontWeight: 700, fontSize: '1rem', color: '#1B5E20', marginBottom: 6 }}>Drop your certificate here</div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>PDF, JPG, PNG · Max 10MB</div>
-              <button className="btn btn-outline btn-sm" style={{ marginTop: 16 }}>Browse Files</button>
-            </div>
-            <button className="btn btn-primary btn-full" onClick={() => toast.success('Certificate verified & uploaded!')}>
-              ✅ Upload & Verify Certificate
-            </button>
-          </div>
-        )}
-
-        {/* AI Quality Analysis Tab */}
-        {activeTab === 'ai' && (
-          <div style={{ background: 'var(--card-bg)', borderRadius: 20, padding: 32, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', maxWidth: 500 }}>
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: '#1B5E20', marginBottom: 8 }}>
-              🤖 AI Quality Analysis
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 24 }}>
-              Upload a photo of your crop — our AI gives instant quality grade estimate
-            </p>
-            <div
-              style={{ border: '3px dashed #FFD54F', borderRadius: 16, padding: '40px 32px', textAlign: 'center', cursor: 'pointer', marginBottom: 20, background: '#FFFDE7' }}
-              onClick={handleImageUpload}
-            >
-              <Camera size={48} color="#FF8F00" style={{ margin: '0 auto 16px' }} />
-              <div style={{ fontWeight: 700, fontSize: '1rem', color: '#E65100', marginBottom: 6 }}>
-                📷 Upload Crop Photo for AI Analysis
-              </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>JPG, PNG · Click to select</div>
-            </div>
-
-            {analyzing && (
-              <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                <div style={{ fontSize: 48, marginBottom: 12, animation: 'pulse 1s infinite' }}>🤖</div>
-                <div style={{ fontWeight: 600, color: '#1B5E20' }}>Analyzing crop quality...</div>
-                <div className="skeleton" style={{ height: 8, margin: '12px 0' }} />
-                <div className="skeleton" style={{ height: 8, width: '80%' }} />
-              </div>
-            )}
-
-            {aiResult && (
-              <div style={{ background: '#E8F5E9', borderRadius: 16, padding: 20 }}>
-                <div style={{ fontWeight: 700, color: '#1B5E20', fontSize: '1rem', marginBottom: 14 }}>
-                  ✅ AI Quality Analysis Result
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
-                  {[
-                    ['Grade', aiResult.grade, '#1B5E20'],
-                    ['Moisture', aiResult.moisture, '#1565C0'],
-                    ['Protein', aiResult.protein, '#6A1B9A'],
-                    ['Purity', aiResult.purity, '#E65100'],
-                  ].map(([key, val, color]) => (
-                    <div key={key} style={{ background: 'var(--card-bg)', borderRadius: 10, padding: 12 }}>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>{key}</div>
-                      <div style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.1rem', color }}>{val}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="alert alert-success">{aiResult.recommendation}</div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* IoT Data Tab */}
-        {activeTab === 'iot' && (
-          <div>
-            <div style={{ background: 'var(--card-bg)', borderRadius: 20, padding: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', marginBottom: 20 }}>
-              <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: '#1B5E20', marginBottom: 6 }}>
-                📡 IoT Sensor Dashboard
-              </h2>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: 24 }}>Real-time field monitoring · Updated 5 min ago</p>
-              <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 20 }}>
-                {IOT_DATA.map(item => <IotGauge key={item.label} {...item} />)}
-              </div>
-            </div>
-            <div className="alert alert-success">
-              🌱 <strong>Field Status: Excellent</strong> — All parameters are within optimal range. Your crop is healthy and ready for quality testing.
-            </div>
-          </div>
-        )}
-
-        {/* History Tab */}
-        {activeTab === 'history' && (
-          <div style={{ background: 'var(--card-bg)', borderRadius: 20, padding: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: '#1B5E20', marginBottom: 20 }}>
-              📜 Testing History
-            </h2>
-            <div className="timeline">
-              {HISTORY.map((h, i) => (
-                <div className="timeline-item" key={i}>
-                  <div className="timeline-dot" style={{ background: h.status === 'Certified' ? '#4CAF50' : '#9CA3AF' }} />
-                  <div style={{ background: 'var(--surface-bg)', borderRadius: 12, padding: '14px 16px', border: '1px solid var(--border)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div>
-                        <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{h.crop} — Grade {h.grade}</div>
-                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 3 }}>{h.date}</div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span className={`badge ${h.status === 'Certified' ? 'badge-green' : 'badge-red'}`}>{h.status}</span>
-                        {h.download && (
-                          <button className="btn btn-ghost btn-icon btn-sm" onClick={() => toast.success('Certificate downloaded!')}
-                            style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#1B5E20', minHeight: 32 }}>
-                            <Download size={14} />
-                          </button>
-                        )}
-                      </div>
-                    </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8125rem' }}>
+                    <div style={{ fontWeight: 700 }}>₹{lab.price} <span style={{ fontWeight: 500, opacity: 0.6 }}>/ test</span></div>
+                    <div style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}><Clock size={12} /> {lab.turnaround}</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         )}
+
+        {/* ── TAB CONTENT: AI ── */}
+        {activeTab === 'ai' && (
+          <div style={{ maxWidth: 640, margin: '0 auto' }}>
+            <div style={{ background: 'var(--bg-card)', borderRadius: 24, padding: 40, border: '1px solid var(--border)', boxShadow: 'var(--shadow-lg)', textAlign: 'center' }}>
+              <div style={{ width: 64, height: 64, background: 'var(--brand-50)', color: 'var(--brand-600)', borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+                <Sparkles size={32} />
+              </div>
+              <h3 style={{ fontWeight: 800, fontSize: '1.5rem', marginBottom: 12 }}>Aarohan Computer Vision</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', marginBottom: 32, maxWidth: 400, margin: '0 auto 32px' }}>
+                Upload high-res images of your crop grains for instant visual quality grading and purity estimation.
+              </p>
+              
+              <div 
+                onClick={simulateAiAnalysis}
+                style={{ 
+                  border: '2px dashed var(--brand-200)', background: 'var(--bg-page)', borderRadius: 20, padding: 48,
+                  cursor: 'pointer', transition: 'all 0.2s', position: 'relative', overflow: 'hidden'
+                }}
+              >
+                {analyzing ? (
+                  <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(4px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                    <div style={{ width: 32, height: 32, border: '3px solid var(--brand-100)', borderTopColor: 'var(--brand-600)', borderRadius: 99, animation: 'spin 1s linear infinite', marginBottom: 12 }} />
+                    <div style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--brand-700)' }}>Scanning Grains...</div>
+                  </div>
+                ) : null}
+                <div style={{ color: 'var(--brand-600)', marginBottom: 16 }}><Camera size={48} /></div>
+                <div style={{ fontWeight: 800, fontSize: '1.125rem', marginBottom: 6 }}>Drop Image or Click to Capture</div>
+                <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>Supported: JPG, PNG (Max 12MB)</div>
+                <button className="btn btn-primary" style={{ marginTop: 24 }}>Upload for AI Scan</button>
+              </div>
+
+              {aiResult && (
+                <div style={{ marginTop: 32, textAlign: 'left', background: 'var(--brand-50)', padding: 24, borderRadius: 16, border: '1px solid var(--brand-100)' }}>
+                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--brand-800)', fontWeight: 800, marginBottom: 20 }}>
+                     <CheckCircle size={20} /> AI ANALYSIS SUMMARY
+                   </div>
+                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}>
+                     {[
+                       { l: 'Grade', v: aiResult.grade },
+                       { l: 'Moisture', v: aiResult.moisture },
+                       { l: 'Purity', v: aiResult.purity },
+                       { l: 'Starch', v: aiResult.starch },
+                     ].map((s, i) => (
+                       <div key={i} style={{ background: 'white', padding: 12, borderRadius: 12, border: '1px solid var(--brand-100)' }}>
+                         <div style={{ fontSize: '0.625rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 4 }}>{s.l}</div>
+                         <div style={{ fontSize: '1.125rem', fontWeight: 900, color: 'var(--brand-700)' }}>{s.v}</div>
+                       </div>
+                     ))}
+                   </div>
+                   <p style={{ fontSize: '0.875rem', color: 'var(--brand-800)', lineHeight: 1.6 }}>{aiResult.recommendation}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB CONTENT: IOT ── */}
+        {activeTab === 'iot' && (
+          <div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 32 }}>
+              {IOT_DATA.map(item => <IotGauge key={item.label} {...item} />)}
+            </div>
+            <div style={{ background: 'var(--bg-card)', padding: 24, borderRadius: 20, border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 20 }}>
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: 'var(--success-50)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Zap size={24} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <h4 style={{ fontWeight: 800, fontSize: '1rem', marginBottom: 4 }}>Field Intelligence Node #12</h4>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>Status: Active · Hub: Pithampur-West · Last ping: 42s ago</p>
+              </div>
+              <button className="btn btn-secondary">Sync Live Stream</button>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB CONTENT: HISTORY ── */}
+        {activeTab === 'history' && (
+          <div style={{ background: 'var(--bg-card)', borderRadius: 20, border: '1px solid var(--border)', overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ background: 'var(--bg-page)', borderBottom: '1px solid var(--border)' }}>
+                  <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Type / Certificate ID</th>
+                  <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Commodity</th>
+                  <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Grade</th>
+                  <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Blockchain Hash</th>
+                  <th style={{ textAlign: 'right', padding: '16px 24px', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {QUALITY_HISTORY.map(h => (
+                  <tr key={h.id} style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.2s' }}>
+                    <td style={{ padding: '20px 24px' }}>
+                      <div style={{ fontWeight: 700, fontSize: '0.875rem' }}>Quality Certificate</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{h.id} · {h.date}</div>
+                    </td>
+                    <td style={{ padding: '20px 24px' }}>
+                      <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{h.crop}</div>
+                    </td>
+                    <td style={{ padding: '20px 24px' }}>
+                      <span style={{ 
+                        background: h.grade.includes('A') ? 'var(--success-50)' : 'var(--bg-page)', 
+                        color: h.grade.includes('A') ? 'var(--success-700)' : 'var(--text-muted)',
+                        padding: '4px 8px', borderRadius: 6, fontSize: '0.75rem', fontWeight: 800
+                      }}>{h.grade}</span>
+                    </td>
+                    <td style={{ padding: '20px 24px' }}>
+                      <code style={{ fontSize: '0.6875rem', color: 'var(--brand-600)', background: 'var(--brand-50)', padding: '2px 6px', borderRadius: 4 }}>{h.hash}</code>
+                    </td>
+                    <td style={{ padding: '20px 24px', textAlign: 'right' }}>
+                      <button 
+                        onClick={() => toast.success(`Downloading ${h.id}...`)}
+                        style={{ background: 'none', border: 'none', color: 'var(--brand-600)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, marginLeft: 'auto', fontWeight: 700, fontSize: '0.75rem' }}
+                      >
+                        <Download size={16} /> PDF
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
       </div>
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 }

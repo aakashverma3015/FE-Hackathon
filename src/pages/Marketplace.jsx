@@ -76,179 +76,222 @@ export default function Marketplace() {
   };
 
   return (
-    <div style={{ background: 'var(--surface-bg)', minHeight: '100vh', paddingBottom: 32 }}>
+    <div style={{ background: 'var(--bg-page)', minHeight: '100vh', paddingBottom: 60, color: 'var(--text-primary)', fontFamily: 'Inter, sans-serif' }}>
       <div className="container" style={{ paddingTop: 24 }}>
 
-        {/* Breadcrumb */}
-        <div className="breadcrumb" style={{ marginBottom: 16 }}>
-          <span className="breadcrumb-item">🏠 Home</span>
-          <span className="breadcrumb-sep">/</span>
-          <span className="breadcrumb-item active">📦 Crop Marketplace</span>
+        {/* ── BREADCRUMB ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontSize: '0.8125rem', fontWeight: 500, color: 'var(--text-muted)' }}>
+          <span style={{ cursor: 'pointer', transition: 'color 0.15s' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--brand-600)'} onMouseLeave={e => e.currentTarget.style.color = 'inherit'}>Home</span>
+          <span style={{ color: 'var(--border-strong)' }}>/</span>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Crop Marketplace</span>
         </div>
 
-        {/* AI Price Suggestion Banner */}
+        {/* ── AI PRICE SUGGESTION BANNER ── */}
         <div style={{
-          background: 'linear-gradient(135deg, #E8F5E9, #C8E6C9)', borderRadius: 16,
-          padding: '16px 20px', marginBottom: 24, border: '2px solid #4CAF50',
-          display: 'flex', alignItems: 'center', gap: 16,
+          background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 16,
+          padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20,
+          boxShadow: 'var(--shadow-sm)', position: 'relative', overflow: 'hidden'
         }}>
-          <div style={{ fontSize: 36 }}>🤖</div>
-          <div>
-            <div style={{ fontWeight: 700, color: '#1B5E20', fontSize: '0.95rem' }}>AI Price Suggestion</div>
-            <div style={{ fontSize: '0.875rem', color: '#2E7D32' }}>
-              Based on Indore mandi rate today — Suggested: <strong>₹{suggestedMin.toLocaleString()}–₹{suggestedMax.toLocaleString()}/quintal</strong>
-            </div>
+          {/* Accent strip */}
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, background: 'var(--brand-500)' }} />
+          
+          <div style={{
+            width: 48, height: 48, borderRadius: 12, background: 'var(--brand-50)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+          }}>
+            <Sparkles size={24} color="var(--brand-600)" />
           </div>
-          <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
-            <div style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.4rem', color: '#1B5E20' }}>
-              ₹5,200 <span style={{ fontSize: '0.75rem', color: '#4CAF50' }}>Live</span>
+
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+              <span style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>AI Market Intelligence</span>
+              <span style={{ background: 'var(--brand-100)', color: 'var(--brand-700)', padding: '1px 8px', borderRadius: 999, fontSize: '0.625rem', fontWeight: 800, textTransform: 'uppercase' }}>Live Analysis</span>
             </div>
-            <div style={{ fontSize: '0.75rem', color: '#388E3C' }}>Current Mandi</div>
+            <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 500 }}>
+              Based on the Indore Mandi index — your crop's fair market value is currently 
+              <strong style={{ color: 'var(--brand-700)' }}> ₹{suggestedMin.toLocaleString()} – ₹{suggestedMax.toLocaleString()}</strong> per quintal.
+            </p>
+          </div>
+
+          <div style={{ textAlign: 'right', paddingLeft: 20, borderLeft: '1px solid var(--border)' }}>
+            <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 2 }}>Current Mandi Avg</div>
+            <div style={{ fontWeight: 900, fontSize: '1.5rem', color: 'var(--brand-700)', letterSpacing: '-0.03em' }}>
+              ₹5,200
+            </div>
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.2fr)', gap: 32, alignItems: 'start' }}>
 
-          {/* LEFT: Crop Listing Form */}
-          <div style={{ background: 'var(--card-bg)', borderRadius: 20, padding: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-            <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.2rem', color: '#1B5E20', marginBottom: 6 }}>
-              📦 {t('cropListing')}
+          {/* ── LEFT: CROP LISTING FORM ── */}
+          <div style={{ background: 'var(--bg-card)', borderRadius: 16, padding: '24px 32px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20, letterSpacing: '-0.02em' }}>
+              Create Sale Listing
             </h2>
 
-            {/* Sell Mode Toggle */}
-            <div className="toggle-wrap" style={{ marginBottom: 20 }}>
-              <div className={`toggle-opt ${sellMode === 'sell' ? 'active' : ''}`} onClick={() => setSellMode('sell')}>
-                🛒 {t('sellNow')}
-              </div>
-              <div className={`toggle-opt ${sellMode === 'store' ? 'active' : ''}`} onClick={() => setSellMode('store')}>
-                🧊 {t('storeSellLater')}
-              </div>
+            {/* Mode Toggle */}
+            <div style={{ display: 'flex', background: 'var(--brand-50)', borderRadius: 12, padding: 4, marginBottom: 24, border: '1px solid var(--brand-100)' }}>
+              <button 
+                onClick={() => setSellMode('sell')}
+                style={{
+                  flex: 1, padding: '8px 12px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600,
+                  background: sellMode === 'sell' ? 'white' : 'transparent',
+                  color: sellMode === 'sell' ? 'var(--brand-700)' : 'var(--text-muted)',
+                  boxShadow: sellMode === 'sell' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                  transition: 'all 0.2s', border: 'none', cursor: 'pointer'
+                }}
+              >
+                Sell Immediately
+              </button>
+              <button 
+                onClick={() => setSellMode('store')}
+                style={{
+                  flex: 1, padding: '8px 12px', borderRadius: 8, fontSize: '0.8125rem', fontWeight: 600,
+                  background: sellMode === 'store' ? 'white' : 'transparent',
+                  color: sellMode === 'store' ? 'var(--brand-700)' : 'var(--text-muted)',
+                  boxShadow: sellMode === 'store' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                  transition: 'all 0.2s', border: 'none', cursor: 'pointer'
+                }}
+              >
+                Cold Store & Sell Later
+              </button>
             </div>
 
             {listed ? (
-              <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                <div className="success-icon" style={{ fontSize: 60, marginBottom: 16 }}>✅</div>
-                <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1B5E20', marginBottom: 8 }}>Crop Listed Successfully!</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 20 }}>Buyers in your area have been notified. You'll receive offers within 24 hours.</p>
-                <div style={{ display: 'flex', gap: 10 }}>
-                  <button className="btn btn-outline btn-sm" onClick={() => setShowQR(true)}>
-                    📱 Generate QR
-                  </button>
-                  <button className="btn btn-primary btn-sm" onClick={() => setListed(false)}>
-                    + List Another
-                  </button>
+              <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                <div style={{ 
+                  width: 64, height: 64, borderRadius: 99, background: '#ECFDF5', margin: '0 auto 20px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  <CheckCircle size={32} color="#10B981" />
+                </div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>Listing Published</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: 24, lineHeight: 1.5 }}>
+                  Buyers in the Indore region have been notified.<br />You'll receive offers via chat and SMS.
+                </p>
+                <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 32 }}>
+                  <button className="btn btn-secondary btn-sm" onClick={() => setShowQR(true)}>View Batch QR</button>
+                  <button className="btn btn-primary btn-sm" onClick={() => setListed(false)}>List Another Crop</button>
                 </div>
 
-                {/* Profit Suggestion Integration */}
+                {/* ── PROFIT STRATEGY COMPARISON ── */}
                 <div style={{
-                  marginTop: 32, background: 'var(--card-bg)', borderRadius: 20, padding: 24, textAlign: 'left',
-                  boxShadow: '0 4px 24px rgba(27,94,32,0.12)', border: '2px solid var(--green-pale)',
+                  background: 'var(--brand-50)', borderRadius: 16, padding: 24, textAlign: 'left',
+                  border: '1px solid var(--brand-200)', position: 'relative'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
-                    <div style={{ fontSize: 24 }}>💡</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                    <div style={{ background: 'var(--brand-600)', padding: 6, borderRadius: 8 }}>
+                      <Zap size={18} color="white" />
+                    </div>
                     <div>
-                      <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: '#1B5E20' }}>Profit Suggestion</h2>
-                      <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Based on your target price of ₹{Number(form.price).toLocaleString()}</div>
+                      <h4 style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--brand-900)' }}>Aarohan Profit Strategy</h4>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--brand-700)' }}>Maximizing your take-home income</p>
                     </div>
                   </div>
 
-                  {/* Middleman Option */}
-                  <div style={{ padding: '14px 18px', borderRadius: 12, border: '2px solid var(--border)', marginBottom: 12 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div>
-                        <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.95rem' }}>
-                          🔗 Sell to Middleman
+                  {/* Comparisons */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {/* Middleman */}
+                    <div style={{ background: 'white', padding: 16, borderRadius: 12, border: '1px solid var(--border)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-muted)' }}>Mandi Middleman Sale</div>
+                          <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)', marginTop: 2 }}>After 15% commission & hidden charges</div>
                         </div>
-                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>
-                          After 15% deductions & commission
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-muted)' }}>₹{(Number(form.price) * 0.85).toLocaleString()}</span>
+                          <div style={{ fontSize: '0.625rem', color: 'var(--text-muted)', fontWeight: 600 }}>per quintal</div>
                         </div>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem', color: 'var(--text-muted)' }}>
-                          ₹{(Number(form.price) * 0.85).toLocaleString()}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t('dashboard.perQuintal')}</div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Direct Sale Option */}
-                  <div style={{ padding: '14px 18px', borderRadius: 12, border: '2px solid #1B5E20', background: 'var(--green-pale)', position: 'relative' }}>
-                    <div style={{ position: 'absolute', top: -10, right: 16 }}>
-                      <span style={{ background: '#1B5E20', color: 'white', padding: '2px 12px', borderRadius: 100, fontSize: '0.7rem', fontWeight: 700 }}>
-                        ⭐ You Are Here
-                      </span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div>
-                        <div style={{ fontWeight: 700, color: '#1B5E20', fontSize: '0.95rem' }}>
-                          🎯 Sell Directly to Wholesalers
+                    {/* Direct */}
+                    <div style={{ background: 'var(--brand-100)', padding: 16, borderRadius: 12, border: '1px solid var(--brand-300)', position: 'relative' }}>
+                      <div style={{ position: 'absolute', top: -10, right: 12, background: 'var(--brand-600)', color: 'white', padding: '2px 8px', borderRadius: 999, fontSize: '0.625rem', fontWeight: 800 }}>OPTIMIZED</div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--brand-900)' }}>Direct Marketplace Sale</div>
+                          <div style={{ fontSize: '0.6875rem', color: 'var(--brand-700)', marginTop: 2 }}>Zero commission · Direct-to-Wholesaler</div>
                         </div>
-                        <div style={{ fontSize: '0.78rem', color: '#388E3C', marginTop: 2 }}>
-                          Zero commission · Full payment
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--brand-700)' }}>₹{Number(form.price).toLocaleString()}</span>
+                          <div style={{ fontSize: '0.625rem', color: 'var(--brand-700)', fontWeight: 600 }}>per quintal</div>
                         </div>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.6rem', color: '#1B5E20', display: 'inline-block' }}>
-                          ₹{Number(form.price).toLocaleString()}
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#388E3C' }}>{t('dashboard.perQuintal')}</div>
                       </div>
                     </div>
                   </div>
 
                   <div style={{
-                    marginTop: 14, background: 'var(--gold-pale)', borderRadius: 10, padding: '10px 16px',
-                    display: 'flex', alignItems: 'center', gap: 8,
+                    marginTop: 20, background: 'white', borderRadius: 10, padding: '12px 14px',
+                    display: 'flex', alignItems: 'center', gap: 12, border: '1px dashed var(--brand-300)'
                   }}>
-                    <Sparkles size={16} color="#FF8F00" />
-                    <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#E65100' }}>
-                      You save <strong>₹{(Number(form.price) * 0.15).toLocaleString()}/quintal</strong> by using Aarohan Agri! Total profit increase: <strong>₹{(Number(form.price) * 0.15 * Number(form.qty)).toLocaleString()}</strong> ✨
+                    <Star size={16} color="var(--brand-600)" fill="var(--brand-600)" />
+                    <span style={{ fontSize: '0.8125rem', color: 'var(--brand-800)', lineHeight: '1.4' }}>
+                      Using Aarohan Agri increases your net profit by <strong>₹{(Number(form.price) * 0.15 * Number(form.qty)).toLocaleString()}</strong> for this batch.
                     </span>
                   </div>
                 </div>
-
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label className="form-label">{t('cropType')}</label>
-                  <select className="form-select" value={form.crop} onChange={e => setForm({ ...form, crop: e.target.value })} required>
-                    <option value="">{t('nav.select')}...</option>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Crop Type</label>
+                  <select 
+                    style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
+                    value={form.crop} onChange={e => setForm({ ...form, crop: e.target.value })} required
+                  >
+                    <option value="">Select Crop...</option>
                     {CROPS.map(c => <option key={c} value={c}>{t(c)}</option>)}
                   </select>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <div className="form-group">
-                    <label className="form-label">{t('dashboard.quantity')} (qtl)</label>
-                    <input type="number" className="form-input" placeholder="e.g. 50" value={form.qty} onChange={e => setForm({ ...form, qty: e.target.value })} required />
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Quantity (qtl)</label>
+                    <input 
+                      type="number" style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
+                      placeholder="e.g. 50" value={form.qty} onChange={e => setForm({ ...form, qty: e.target.value })} required 
+                    />
                   </div>
-                  <div className="form-group">
-                    <label className="form-label">{t('dashboard.grade')}</label>
-                    <select className="form-select" value={form.grade} onChange={e => setForm({ ...form, grade: e.target.value })} required>
-                      <option value="">{t('dashboard.grade')}...</option>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Quality Grade</label>
+                    <select 
+                      style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
+                      value={form.grade} onChange={e => setForm({ ...form, grade: e.target.value })} required
+                    >
+                      <option value="">Grade...</option>
                       {GRADES.map(g => <option key={g} value={g}>{g}</option>)}
                     </select>
                   </div>
                 </div>
-                <div className="form-group">
-                  <label className="form-label">{t('auth.village')} / {t('dashboard.location')}</label>
-                  <input type="text" className="form-input" placeholder="Village, Tehsil, District" value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} required />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">{t('dashboard.harvestDate')}</label>
-                  <input type="date" className="form-input" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Your Price (₹/quintal)</label>
-                  <input type="number" className="form-input" placeholder="e.g. 5200" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} />
-                  {form.price && parseInt(form.price) >= suggestedMin && (
-                    <div style={{ fontSize: '0.75rem', color: '#4CAF50', marginTop: 6 }}>✅ Good price! Within suggested range.</div>
-                  )}
+
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Village / Mandi Location</label>
+                  <input 
+                    type="text" style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
+                    placeholder="e.g. Dewas, MP" value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} required 
+                  />
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-full btn-lg">
-                  List Crop for Sale
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Harvest/Ready Date</label>
+                    <input 
+                      type="date" style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
+                      value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required 
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 8 }}>Asking Price (₹/qtl)</label>
+                    <input 
+                      type="number" style={{ width: '100%', height: 44, borderRadius: 8, border: '1px solid var(--border)', padding: '0 12px', fontSize: '0.875rem', background: 'var(--bg-page)' }}
+                      placeholder="e.g. 5200" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} 
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" className="btn btn-primary btn-full" style={{ height: 48, fontSize: '0.9375rem' }}>
+                  Publish Listing to Marketplace
                 </button>
               </form>
             )}
@@ -276,32 +319,48 @@ export default function Marketplace() {
             )}
           </div>
 
-          {/* RIGHT: Buyer Offers */}
+          {/* ── RIGHT: BUYER OFFERS ── */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-              <h2 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                💼 Nearby Buyer Offers
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <h2 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                Nearby Wholesaler Offers
               </h2>
               <button
                 onClick={() => setShowMap(!showMap)}
-                className="btn btn-outline btn-sm"
-                style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 8,
+                  fontSize: '0.75rem', fontWeight: 600, border: '1px solid var(--border)', background: 'white',
+                  color: 'var(--text-primary)', cursor: 'pointer'
+                }}
               >
-                <Map size={15} /> {showMap ? 'List View' : 'Map View'}
+                {showMap ? <Layout size={14} /> : <Map size={14} />} {showMap ? 'Show Directory' : 'View on Map'}
               </button>
             </div>
 
-            <div className="filter-bar">
+            <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 16, marginBottom: 8 }}>
               {FILTERS.map(f => (
-                <button key={f} className={`filter-pill ${activeFilter === f ? 'active' : ''}`}
-                  onClick={() => setActiveFilter(f)}>
+                <button 
+                  key={f} 
+                  onClick={() => setActiveFilter(f)}
+                  style={{
+                    padding: '6px 16px', borderRadius: 999, fontSize: '0.75rem', fontWeight: 600,
+                    whiteSpace: 'nowrap', transition: 'all 0.2s', cursor: 'pointer',
+                    background: activeFilter === f ? 'var(--brand-600)' : 'white',
+                    color: activeFilter === f ? 'white' : 'var(--text-muted)',
+                    border: '1px solid',
+                    borderColor: activeFilter === f ? 'var(--brand-600)' : 'var(--border)'
+                  }}
+                >
                   {f}
                 </button>
               ))}
             </div>
 
             {showMap ? (
-              <div className="map-container" style={{ marginBottom: 16 }}>
+              <div style={{ 
+                height: 380, borderRadius: 16, overflow: 'hidden', border: '1px solid var(--border)', 
+                marginBottom: 24, boxShadow: 'var(--shadow-sm)' 
+              }}>
                 <MapContainer center={[22.7196, 75.8577]} zoom={12} style={{ height: '100%', width: '100%' }}>
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="© OSM" />
                   {buyerLocations.map(b => (
@@ -313,58 +372,85 @@ export default function Marketplace() {
               </div>
             ) : null}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {sortedOffers.map((offer, idx) => (
                 <div key={offer.id} style={{
-                  background: 'var(--card-bg)', borderRadius: 16, padding: 16,
-                  border: `2px solid ${idx === 0 && activeFilter === 'Highest Price' ? '#1B5E20' : '#f0f0f0'}`,
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.05)', position: 'relative',
+                  background: 'var(--bg-card)', borderRadius: 16, overflow: 'hidden',
+                  border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
                 }}>
-                  {idx === 0 && activeFilter === 'Highest Price' && (
-                    <div style={{ position: 'absolute', top: -10, left: 16 }}>
-                      <span style={{ background: '#1B5E20', color: 'white', padding: '2px 10px', borderRadius: 100, fontSize: '0.7rem', fontWeight: 700 }}>
-                        🏆 Best Price
-                      </span>
+                  <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                    {/* Visual Strip */}
+                    <div style={{ 
+                      width: 80, background: 'var(--brand-50)', position: 'relative',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      borderRight: '1px solid var(--border-light)'
+                    }}>
+                      <div style={{ 
+                        width: 48, height: 48, borderRadius: 12, background: 'white',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 24, boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                      }}>🏪</div>
                     </div>
-                  )}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                    <div style={{
-                      width: 44, height: 44, borderRadius: 12, background: '#E8F5E9',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0,
-                    }}>🏪</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{offer.name}</span>
-                        {offer.verified && <span className="badge badge-green">✅ Verified</span>}
+
+                    {/* Content */}
+                    <div style={{ flex: 1, padding: 16 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                            <span style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--text-primary)' }}>{offer.name}</span>
+                            {offer.verified && (
+                              <span style={{ 
+                                background: '#ECFDF5', color: '#059669', padding: '1px 8px', borderRadius: 999, 
+                                fontSize: '0.625rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em'
+                              }}>✓ VERIFIED</span>
+                            )}
+                          </div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>📍 {offer.distance} km</span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>⭐ {offer.rating} rating</span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>🚚 {offer.pickup} pickup</span>
+                          </div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontWeight: 900, fontSize: '1.25rem', color: 'var(--brand-700)', letterSpacing: '-0.02em' }}>
+                            ₹{offer.price.toLocaleString()}
+                          </div>
+                          <div style={{ fontSize: '0.625rem', color: 'var(--text-muted)', fontWeight: 600 }}>per quintal</div>
+                        </div>
                       </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                        <span>📍 {offer.distance} km away</span>
-                        <span>⭐ {offer.rating}</span>
-                        <span>🚚 Pickup: {offer.pickup}</span>
-                        <span className="badge badge-blue">{offer.type}</span>
+
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <button 
+                          onClick={() => toast.success(`Acceptance request sent to ${offer.name}!`)}
+                          style={{ 
+                            flex: 1.5, background: 'var(--brand-600)', color: 'white', height: 40, borderRadius: 8,
+                            fontSize: '0.8125rem', fontWeight: 600, border: 'none', cursor: 'pointer',
+                            transition: 'background 0.2s'
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'var(--brand-700)'}
+                          onMouseLeave={e => e.currentTarget.style.background = 'var(--brand-600)'}
+                        >
+                          Send Sale Intent
+                        </button>
+                        <button 
+                          onClick={() => setChatOpen(offer.id)}
+                          style={{ 
+                            flex: 1, background: 'white', color: 'var(--text-primary)', height: 40, borderRadius: 8,
+                            fontSize: '0.8125rem', fontWeight: 600, border: '1px solid var(--border)', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
+                          }}
+                        >
+                          <MessageCircle size={14} /> Negotiate
+                        </button>
                       </div>
                     </div>
-                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.2rem', color: '#1B5E20' }}>
-                        ₹{offer.price.toLocaleString()}
-                      </div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>per quintal</div>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-                    <button className="btn btn-primary" style={{ flex: 1, padding: '10px', fontSize: '0.85rem', minHeight: 40 }}
-                      onClick={() => toast.success(`Offer accepted from ${offer.name}!`)}>
-                      Accept Offer
-                    </button>
-                    <button className="btn btn-outline btn-sm" onClick={() => setChatOpen(offer.id)}
-                      style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <MessageCircle size={15} /> Negotiate
-                    </button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+        </div>
         </div>
 
         {/* Chat Modal */}
