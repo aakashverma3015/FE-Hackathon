@@ -10,7 +10,7 @@ import axios from 'axios';
  * - Request/response logging in development
  */
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://aarohan-agri.onrender.com';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://aarohan-agri.onrender.com/api/';
 
 /* ─── Token helpers ─── */
 export const getToken = () => localStorage.getItem('aarohan-token');
@@ -65,7 +65,7 @@ apiConfig.interceptors.response.use(
       if (refresh) {
         try {
           // Send manual fetch/axios to avoid circular interceptor lock
-          const res = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken: refresh });
+          const res = await axios.post(`${BASE_URL}${cleanPath('/auth/refresh')}`, { refreshToken: refresh });
           if (res.data.success || res.status === 200) {
             setTokens(res.data.accessToken, null);
             originalRequest.headers['Authorization'] = `Bearer ${res.data.accessToken}`;
@@ -88,11 +88,12 @@ apiConfig.interceptors.response.use(
 );
 
 /* ─── Core wrappers ─── */
-const get = (path, params) => apiConfig.get(path, { params });
-const post = (path, body) => apiConfig.post(path, body);
-const put = (path, body) => apiConfig.put(path, body);
-const patch = (path, body) => apiConfig.patch(path, body);
-const del = (path) => apiConfig.delete(path);
+const cleanPath = (path) => path.startsWith('/') ? path.substring(1) : path;
+const get = (path, params) => apiConfig.get(cleanPath(path), { params });
+const post = (path, body) => apiConfig.post(cleanPath(path), body);
+const put = (path, body) => apiConfig.put(cleanPath(path), body);
+const patch = (path, body) => apiConfig.patch(cleanPath(path), body);
+const del = (path) => apiConfig.delete(cleanPath(path));
 
 /* ═══════════════════════════════════════════════
    AUTH API
