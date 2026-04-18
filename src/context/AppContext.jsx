@@ -22,15 +22,15 @@ export function AppProvider({ children }) {
   const [user, setUserState] = useState(null);
   const [isOffline, setIsOffline] = useState(false);
   const [notifications, setNotifications] = useState([
-    { id: 1, type: 'offer',     text: 'New offer from Rajesh Agromart: ₹5,350/quintal', time: '2m ago',  read: false },
-    { id: 2, type: 'transport', text: 'Transport confirmed — VehicleNo: MP09AB1234',    time: '1h ago',  read: true  },
-    { id: 3, type: 'lab',       text: 'Lab test report ready — Grade A Certified',       time: '2h ago',  read: true  },
+    { id: 1, type: 'offer', text: 'New offer from Rajesh Agromart: ₹5,350/quintal', time: '2m ago', read: false },
+    { id: 2, type: 'transport', text: 'Transport confirmed — VehicleNo: MP09AB1234', time: '1h ago', read: true },
+    { id: 3, type: 'lab', text: 'Lab test report ready — Grade A Certified', time: '2h ago', read: true },
   ]);
-  const [buyerOffers, setBuyerOffers]             = useState([]);
-  const [coldStorages, setColdStorages]           = useState([]);
+  const [buyerOffers, setBuyerOffers] = useState([]);
+  const [coldStorages, setColdStorages] = useState([]);
   const [transportProviders, setTransportProviders] = useState([]);
-  const [labs, setLabs]                           = useState([]);
-  const [farmerListings, setFarmerListings]       = useState([]);
+  const [labs, setLabs] = useState([]);
+  const [farmerListings, setFarmerListings] = useState([]);
 
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -76,7 +76,7 @@ export function AppProvider({ children }) {
   useEffect(() => {
     const saved = sessionStorage.getItem('aarohan-user');
     if (saved) {
-      try { setUserState(JSON.parse(saved)); } catch {}
+      try { setUserState(JSON.parse(saved)); } catch { }
     }
   }, []);
 
@@ -100,7 +100,7 @@ export function AppProvider({ children }) {
 
   /* Global Socket Listeners for Alerts / Notifications */
   useEffect(() => {
-    const SOCKET_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5001';
+    const SOCKET_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'https://aarohan-agri.onrender.com';
     const token = localStorage.getItem('aarohan-token');
     const socket = io(SOCKET_URL, {
       auth: { token },

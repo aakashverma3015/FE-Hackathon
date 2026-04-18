@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { mandiAPI } from '../lib/api';
 
-const SOCKET_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5001';
-
+const SOCKET_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'https://aarohan-agri.onrender.com'
 export function useRealtimePrices() {
   const [prices, setPrices] = useState([]);
   const [loading, setLoading] = useState(true);

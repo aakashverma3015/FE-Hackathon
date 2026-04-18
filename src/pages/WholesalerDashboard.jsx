@@ -70,9 +70,9 @@ export default function WholesalerDashboard() {
   }, [farmerListings]);
 
   useEffect(() => {
-    const SOCKET_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5001';
+    const SOCKET_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'https://aarohan-agri.onrender.com';
     const socket = io(SOCKET_URL, { transports: ['websocket', 'polling'] });
-    
+
     socket.on('listing:new', (newListing) => {
       // Create safe object if mocked from socket
       const enriched = {
@@ -82,7 +82,7 @@ export default function WholesalerDashboard() {
         village: newListing.village || 'Indore Region',
         cropKey: `crops.${(newListing.crop || 'soybean').toLowerCase()}`
       };
-      
+
       toast.success(`📣 New Feed: ${enriched.qty} qtl ${enriched.crop} by ${enriched.name}`, { icon: '🔔' });
       setLocalListings(prev => [enriched, ...prev]);
       setNewListingId(enriched.id);
@@ -212,10 +212,10 @@ export default function WholesalerDashboard() {
 
                   <div style={{ display: 'flex', gap: 8 }}>
                     {farmer.certified ? (
-                       <button className="btn btn-full btn-sm" style={{ background: '#111827', color: '#34D399', fontWeight: 800, border: '1px solid #34D399' }} 
-                         onClick={() => { setEscrowModal(farmer); setEscrowStep(0); }}>
-                         🔒 Buy via Escrow (MATIC)
-                       </button>
+                      <button className="btn btn-full btn-sm" style={{ background: '#111827', color: '#34D399', fontWeight: 800, border: '1px solid #34D399' }}
+                        onClick={() => { setEscrowModal(farmer); setEscrowStep(0); }}>
+                        🔒 Buy via Escrow (MATIC)
+                      </button>
                     ) : (
                       <button className="btn btn-primary btn-full btn-sm"
                         onClick={() => { setOfferModal(farmer); setOfferPrice(farmer.price.toString()); }}>
@@ -257,18 +257,17 @@ export default function WholesalerDashboard() {
                       <div style={{ fontFamily: 'Poppins', fontWeight: 800, color: '#1B5E20' }}>
                         ₹{(order.price * order.qty).toLocaleString()}
                       </div>
-                      <span className={`badge ${
-                        order.status === 'Delivered' ? 'badge-green' :
+                      <span className={`badge ${order.status === 'Delivered' ? 'badge-green' :
                         order.status === 'In Transit' ? 'badge-blue' :
-                        order.status === 'Confirmed' ? 'badge-gold' : 'badge-red'
-                      }`}>{order.status}</span>
-                      
+                          order.status === 'Confirmed' ? 'badge-gold' : 'badge-red'
+                        }`}>{order.status}</span>
+
                       <div style={{ marginTop: 8 }}>
                         <button onClick={() => setProvenanceModal(order)} style={{ background: 'none', border: 'none', color: '#0D47A1', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}>
                           🔗 View Provenance
                         </button>
                       </div>
-                      
+
                       {order.status === 'Pending' && (
                         <div style={{ marginTop: 12 }}>
                           <button className="btn btn-sm" onClick={() => setRazorpayModal(order)} style={{ background: '#3399cc', color: 'white', fontWeight: 700, border: 'none' }}>
@@ -389,7 +388,7 @@ export default function WholesalerDashboard() {
                 ⭐ Rate this farmer
               </h3>
               <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 20 }}>
-                {[1,2,3,4,5].map(s => (
+                {[1, 2, 3, 4, 5].map(s => (
                   <button key={s} onClick={() => setRating(s)}
                     style={{ fontSize: 36, background: 'none', border: 'none', cursor: 'pointer', color: s <= rating ? '#FF8F00' : '#e2e8f0', transition: 'all 0.15s', minHeight: 44 }}>
                     ★
@@ -404,9 +403,9 @@ export default function WholesalerDashboard() {
         )}
         {/* ── WEB3 ESCROW MODAL (SIMULATION) ── */}
         {escrowModal && (
-          <div className="modal-overlay" style={{ backdropFilter: 'blur(10px)', background: 'rgba(0,0,0,0.6)' }} onClick={() => { if(escrowStep !== 1) { setEscrowModal(null); setEscrowStep(0); } }}>
+          <div className="modal-overlay" style={{ backdropFilter: 'blur(10px)', background: 'rgba(0,0,0,0.6)' }} onClick={() => { if (escrowStep !== 1) { setEscrowModal(null); setEscrowStep(0); } }}>
             <div className="modal-box" style={{ background: '#111827', color: 'white', border: '1px solid #374151' }} onClick={e => e.stopPropagation()}>
-              
+
               {/* Step 0: Invoice & Wallet Connect */}
               {escrowStep === 0 && (
                 <>
@@ -472,7 +471,7 @@ export default function WholesalerDashboard() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0, position: 'relative' }}>
                 <div style={{ position: 'absolute', top: 10, bottom: 10, left: 15, width: 2, background: '#E8F5E9', zIndex: 0 }} />
-                
+
                 {[
                   { title: "Crop Listed", desc: `Listed by ${provenanceModal.farmer}`, hash: "0x8fa...c91", color: "#1B5E20" },
                   { title: "Lab Results Hashed", desc: "Moisture: 10% · Premium Grade", hash: "0x3bb...2af", color: "#0D47A1" },
@@ -502,7 +501,7 @@ export default function WholesalerDashboard() {
         {razorpayModal && (
           <div className="modal-overlay" onClick={() => !rpLoading && setRazorpayModal(null)} style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
             <div className="modal-box" onClick={e => e.stopPropagation()} style={{ padding: 0, overflow: 'hidden', maxWidth: 450, background: 'white', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column' }}>
-              
+
               {/* Rp Header */}
               <div style={{ background: '#3399cc', color: 'white', padding: '20px 24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
