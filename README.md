@@ -1,4 +1,4 @@
-AAROHAN AGRI – Hinglish Detailed Document
+AAROHAN AGRI 
 🌾 Introduction (Shuruat)
 1 India ki economy ka backbone agriculture hai. 140M+ farmers farming par depend karte
 hain.
